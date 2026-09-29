@@ -1,0 +1,14 @@
+{
+ "checked_at_utc": "2026-09-29T13:19:00+00:00",
+ "cutoff_ts": "2026-09-16T23:00:00",
+ "n_days_server": 624,
+ "n_days_local": 624,
+ "n_days_with_difference": 0,
+ "differences": [],
+ "total_rows_server": 45243727,
+ "total_rows_local": 45243727,
+ "sum_ridership_server": 2238986651.0,
+ "sum_ridership_local": 2238986651.0,
+ "sum_transfers_server": 111767861.0,
+ "sum_transfers_local": 111767861.0
+}

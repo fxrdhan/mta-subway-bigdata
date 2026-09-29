@@ -1,0 +1,41 @@
+{
+ "related_id": "wujg-7c2s",
+ "name": "MTA Subway Hourly Ridership: 2020-2024",
+ "meta": {
+  "rowsUpdatedAt": "2025-10-15T13:19:23+00:00",
+  "viewLastModified": "2026-03-10T18:00:55+00:00",
+  "createdAt": "2023-05-11T20:55:06+00:00",
+  "posting_frequency": "Static - Not Updated",
+  "time_period": "2020 - 2024"
+ },
+ "count": {
+  "rows": 120855567,
+  "min_ts": "2020-01-01T00:00:00.000",
+  "max_ts": "2024-12-31T23:00:00.000"
+ },
+ "schema": {
+  "regular_columns_identical_names_types_order": true,
+  "hidden_columns_only_in_old": [
+   ":@computed_region_kjdx_g34t",
+   ":@computed_region_yamh_8v7k",
+   ":@computed_region_wbg7_3whc"
+  ]
+ },
+ "values": {
+  "stations_old": 428,
+  "stations_new": 428,
+  "stations_common": 428,
+  "only_in_old": [],
+  "only_in_new": [],
+  "fare_classes_old": 12,
+  "fare_classes_new": 12,
+  "fare_only_in_old": [],
+  "fare_only_in_new": []
+ },
+ "join": {
+  "last_old": "2024-12-31 23:00:00",
+  "first_new": "2025-01-01 00:00:00",
+  "gap_hours_between_last_and_first_stamp": 1.0,
+  "total_rows_if_combined": 166099294
+ }
+}

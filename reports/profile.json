@@ -1,0 +1,1148 @@
+{
+ "n_rows": 45243727,
+ "n_cols": 12,
+ "schema": {
+  "transit_timestamp": "TIMESTAMP",
+  "transit_mode": "VARCHAR",
+  "station_complex_id": "VARCHAR",
+  "station_complex": "VARCHAR",
+  "borough": "VARCHAR",
+  "payment_method": "VARCHAR",
+  "fare_class_category": "VARCHAR",
+  "ridership": "DOUBLE",
+  "transfers": "DOUBLE",
+  "latitude": "DOUBLE",
+  "longitude": "DOUBLE",
+  "georeference": "VARCHAR"
+ },
+ "n_files": 21,
+ "parquet_bytes": 124562943,
+ "nulls": {
+  "transit_timestamp": 0,
+  "transit_mode": 0,
+  "station_complex_id": 0,
+  "station_complex": 0,
+  "borough": 0,
+  "payment_method": 0,
+  "fare_class_category": 0,
+  "ridership": 0,
+  "transfers": 0,
+  "latitude": 0,
+  "longitude": 0,
+  "georeference": 0
+ },
+ "empty_strings": {
+  "transit_mode": 0,
+  "station_complex_id": 0,
+  "station_complex": 0,
+  "borough": 0,
+  "payment_method": 0,
+  "fare_class_category": 0,
+  "georeference": 0
+ },
+ "key_uniqueness": {
+  "n_key_distinct": 45243727,
+  "n_key_duplikat": 0,
+  "baris_berlebih": 0,
+  "max_per_key": 1
+ },
+ "full_row_distinct": 45243727,
+ "time_range": [
+  {
+   "min_ts": "2025-01-01 00:00:00",
+   "max_ts": "2026-09-16 23:00:00",
+   "n_jam_distinct": 14975,
+   "n_hari_distinct": 624
+  }
+ ],
+ "by_month": [
+  {
+   "bulan": "2025-01",
+   "rows": 2398982,
+   "server": 2398982,
+   "hours": 744,
+   "hours_expected": 744,
+   "stations": 428,
+   "omny": 780857,
+   "metrocard": 1618125,
+   "ridership": 100254088.0
+  },
+  {
+   "bulan": "2025-02",
+   "rows": 2273357,
+   "server": 2273357,
+   "hours": 672,
+   "hours_expected": 672,
+   "stations": 421,
+   "omny": 829526,
+   "metrocard": 1443831,
+   "ridership": 95383233.0
+  },
+  {
+   "bulan": "2025-03",
+   "rows": 2599249,
+   "server": 2599249,
+   "hours": 744,
+   "hours_expected": 744,
+   "stations": 424,
+   "omny": 1026139,
+   "metrocard": 1573110,
+   "ridership": 109841656.0
+  },
+  {
+   "bulan": "2025-04",
+   "rows": 2646409,
+   "server": 2646409,
+   "hours": 720,
+   "hours_expected": 720,
+   "stations": 423,
+   "omny": 1118807,
+   "metrocard": 1527602,
+   "ridership": 111631248.0
+  },
+  {
+   "bulan": "2025-05",
+   "rows": 2776119,
+   "server": 2776119,
+   "hours": 744,
+   "hours_expected": 744,
+   "stations": 428,
+   "omny": 1198853,
+   "metrocard": 1577266,
+   "ridership": 115151825.0
+  },
+  {
+   "bulan": "2025-06",
+   "rows": 2673221,
+   "server": 2673221,
+   "hours": 720,
+   "hours_expected": 720,
+   "stations": 428,
+   "omny": 1162470,
+   "metrocard": 1510751,
+   "ridership": 108114701.0
+  },
+  {
+   "bulan": "2025-07",
+   "rows": 2711975,
+   "server": 2711975,
+   "hours": 744,
+   "hours_expected": 744,
+   "stations": 428,
+   "omny": 1207117,
+   "metrocard": 1504858,
+   "ridership": 107908350.0
+  },
+  {
+   "bulan": "2025-08",
+   "rows": 2681448,
+   "server": 2681448,
+   "hours": 744,
+   "hours_expected": 744,
+   "stations": 428,
+   "omny": 1233167,
+   "metrocard": 1448281,
+   "ridership": 104134420.0
+  },
+  {
+   "bulan": "2025-09",
+   "rows": 2581490,
+   "server": 2581490,
+   "hours": 720,
+   "hours_expected": 720,
+   "stations": 428,
+   "omny": 1227483,
+   "metrocard": 1354007,
+   "ridership": 112550616.0
+  },
+  {
+   "bulan": "2025-10",
+   "rows": 2578816,
+   "server": 2578816,
+   "hours": 744,
+   "hours_expected": 744,
+   "stations": 428,
+   "omny": 1299477,
+   "metrocard": 1279339,
+   "ridership": 117769153.0
+  },
+  {
+   "bulan": "2025-11",
+   "rows": 2341100,
+   "server": 2341100,
+   "hours": 720,
+   "hours_expected": 720,
+   "stations": 428,
+   "omny": 1266068,
+   "metrocard": 1075032,
+   "ridership": 108184839.0
+  },
+  {
+   "bulan": "2025-12",
+   "rows": 2209615,
+   "server": 2209615,
+   "hours": 744,
+   "hours_expected": 744,
+   "stations": 428,
+   "omny": 1308051,
+   "metrocard": 901564,
+   "ridership": 112710695.0
+  },
+  {
+   "bulan": "2026-01",
+   "rows": 1859429,
+   "server": 1859429,
+   "hours": 744,
+   "hours_expected": 744,
+   "stations": 428,
+   "omny": 1275887,
+   "metrocard": 583542,
+   "ridership": 101897556.0
+  },
+  {
+   "bulan": "2026-02",
+   "rows": 1658281,
+   "server": 1658281,
+   "hours": 672,
+   "hours_expected": 672,
+   "stations": 428,
+   "omny": 1192279,
+   "metrocard": 466002,
+   "ridership": 96638102.0
+  },
+  {
+   "bulan": "2026-03",
+   "rows": 1840773,
+   "server": 1840773,
+   "hours": 743,
+   "hours_expected": 744,
+   "stations": 428,
+   "omny": 1362134,
+   "metrocard": 478639,
+   "ridership": 116394480.0
+  },
+  {
+   "bulan": "2026-04",
+   "rows": 1725407,
+   "server": 1725407,
+   "hours": 720,
+   "hours_expected": 720,
+   "stations": 428,
+   "omny": 1335800,
+   "metrocard": 389607,
+   "ridership": 114045211.0
+  },
+  {
+   "bulan": "2026-05",
+   "rows": 1757938,
+   "server": 1757938,
+   "hours": 744,
+   "hours_expected": 744,
+   "stations": 428,
+   "omny": 1392132,
+   "metrocard": 365806,
+   "ridership": 115448671.0
+  },
+  {
+   "bulan": "2026-06",
+   "rows": 1683047,
+   "server": 1683047,
+   "hours": 720,
+   "hours_expected": 720,
+   "stations": 428,
+   "omny": 1359085,
+   "metrocard": 323962,
+   "ridership": 115785937.0
+  },
+  {
+   "bulan": "2026-07",
+   "rows": 1731793,
+   "server": 1731793,
+   "hours": 744,
+   "hours_expected": 744,
+   "stations": 428,
+   "omny": 1396899,
+   "metrocard": 334894,
+   "ridership": 110295127.0
+  },
+  {
+   "bulan": "2026-08",
+   "rows": 1706084,
+   "server": 1706084,
+   "hours": 744,
+   "hours_expected": 744,
+   "stations": 428,
+   "omny": 1405504,
+   "metrocard": 300580,
+   "ridership": 105942323.0
+  },
+  {
+   "bulan": "2026-09",
+   "rows": 809194,
+   "server": 809194,
+   "hours": 384,
+   "hours_expected": 720,
+   "stations": 428,
+   "omny": 693327,
+   "metrocard": 115867,
+   "ridership": 58904420.0
+  }
+ ],
+ "missing_hours": [
+  {
+   "jam_hilang": "2026-03-08 02:00:00"
+  }
+ ],
+ "sparse_days": [],
+ "dst_check": [
+  {
+   "tag": "spring 2025 -7h",
+   "hari": "2025-03-02",
+   "j00": 42489.0,
+   "j01": 21674.0,
+   "j02": 11855.0,
+   "j03": 8588.0,
+   "j04": 10987.0,
+   "jam_ada_hari_itu": 24
+  },
+  {
+   "tag": "SPRING 2025 (DST)",
+   "hari": "2025-03-09",
+   "j00": 44213.0,
+   "j01": 22637.0,
+   "j02": 4340.0,
+   "j03": 15925.0,
+   "j04": 17004.0,
+   "jam_ada_hari_itu": 24
+  },
+  {
+   "tag": "spring 2025 +7h",
+   "hari": "2025-03-16",
+   "j00": 41600.0,
+   "j01": 21498.0,
+   "j02": 13418.0,
+   "j03": 9413.0,
+   "j04": 11388.0,
+   "jam_ada_hari_itu": 24
+  },
+  {
+   "tag": "fall 2025 -7h",
+   "hari": "2025-10-26",
+   "j00": 49850.0,
+   "j01": 27204.0,
+   "j02": 15807.0,
+   "j03": 10437.0,
+   "j04": 12117.0,
+   "jam_ada_hari_itu": 24
+  },
+  {
+   "tag": "FALL 2025 (DST)",
+   "hari": "2025-11-02",
+   "j00": 60965.0,
+   "j01": 47605.0,
+   "j02": 11775.0,
+   "j03": 10253.0,
+   "j04": 14987.0,
+   "jam_ada_hari_itu": 24
+  },
+  {
+   "tag": "fall 2025 +7h",
+   "hari": "2025-11-09",
+   "j00": 51479.0,
+   "j01": 26916.0,
+   "j02": 15261.0,
+   "j03": 10642.0,
+   "j04": 11840.0,
+   "jam_ada_hari_itu": 24
+  },
+  {
+   "tag": "spring 2026 -7h",
+   "hari": "2026-03-01",
+   "j00": 51917.0,
+   "j01": 26555.0,
+   "j02": 15857.0,
+   "j03": 12047.0,
+   "j04": 13466.0,
+   "jam_ada_hari_itu": 24
+  },
+  {
+   "tag": "SPRING 2026 (DST)",
+   "hari": "2026-03-08",
+   "j00": 47452.0,
+   "j01": 25712.0,
+   "j02": null,
+   "j03": 18738.0,
+   "j04": 16969.0,
+   "jam_ada_hari_itu": 23
+  },
+  {
+   "tag": "spring 2026 +7h",
+   "hari": "2026-03-15",
+   "j00": 47429.0,
+   "j01": 23919.0,
+   "j02": 13693.0,
+   "j03": 10352.0,
+   "j04": 12746.0,
+   "jam_ada_hari_itu": 24
+  }
+ ],
+ "cardinality": {
+  "transit_mode": 3,
+  "station_complex_id": 428,
+  "station_complex": 428,
+  "borough": 5,
+  "payment_method": 2,
+  "fare_class_category": 12,
+  "georeference": 428
+ },
+ "top_transit_mode": [
+  {
+   "transit_mode": "subway",
+   "baris": 44911362,
+   "pct": 99.265,
+   "ridership": 2230116750.0
+  },
+  {
+   "transit_mode": "staten_island_railway",
+   "baris": 175574,
+   "pct": 0.388,
+   "ridership": 3743955.0
+  },
+  {
+   "transit_mode": "tram",
+   "baris": 156791,
+   "pct": 0.347,
+   "ridership": 5125946.0
+  }
+ ],
+ "top_borough": [
+  {
+   "borough": "Brooklyn",
+   "baris": 15989323,
+   "pct": 35.34,
+   "ridership": 499714805.0
+  },
+  {
+   "borough": "Manhattan",
+   "baris": 13982177,
+   "pct": 30.904,
+   "ridership": 1251919805.0
+  },
+  {
+   "borough": "Queens",
+   "baris": 7858046,
+   "pct": 17.368,
+   "ridership": 330122006.0
+  },
+  {
+   "borough": "Bronx",
+   "baris": 7238605,
+   "pct": 15.999,
+   "ridership": 153486078.0
+  },
+  {
+   "borough": "Staten Island",
+   "baris": 175576,
+   "pct": 0.388,
+   "ridership": 3743957.0
+  }
+ ],
+ "top_payment_method": [
+  {
+   "payment_method": "omny",
+   "baris": 25071062,
+   "pct": 55.413,
+   "ridership": 1963088148.0
+  },
+  {
+   "payment_method": "metrocard",
+   "baris": 20172665,
+   "pct": 44.587,
+   "ridership": 275898503.0
+  }
+ ],
+ "top_fare_class_category": [
+  {
+   "fare_class_category": "OMNY - Full Fare",
+   "baris": 6213926,
+   "pct": 13.734,
+   "ridership": 1636237907.0
+  },
+  {
+   "fare_class_category": "OMNY - Students",
+   "baris": 5292374,
+   "pct": 11.697,
+   "ridership": 134801732.0
+  },
+  {
+   "fare_class_category": "OMNY - Seniors & Disability",
+   "baris": 5101297,
+   "pct": 11.275,
+   "ridership": 100401405.0
+  },
+  {
+   "fare_class_category": "Metrocard - Other",
+   "baris": 4970599,
+   "pct": 10.986,
+   "ridership": 46118774.0
+  },
+  {
+   "fare_class_category": "OMNY - Fair Fare",
+   "baris": 4592853,
+   "pct": 10.151,
+   "ridership": 61408404.0
+  },
+  {
+   "fare_class_category": "OMNY - Other",
+   "baris": 3870612,
+   "pct": 8.555,
+   "ridership": 30238700.0
+  },
+  {
+   "fare_class_category": "Metrocard - Unlimited 30-Day",
+   "baris": 3807666,
+   "pct": 8.416,
+   "ridership": 62181238.0
+  },
+  {
+   "fare_class_category": "Metrocard - Unlimited 7-Day",
+   "baris": 3326917,
+   "pct": 7.353,
+   "ridership": 56041330.0
+  },
+  {
+   "fare_class_category": "Metrocard - Full Fare",
+   "baris": 3317659,
+   "pct": 7.333,
+   "ridership": 73350892.0
+  },
+  {
+   "fare_class_category": "Metrocard - Fair Fare",
+   "baris": 2448705,
+   "pct": 5.412,
+   "ridership": 23062550.0
+  },
+  {
+   "fare_class_category": "Metrocard - Seniors & Disability",
+   "baris": 2300975,
+   "pct": 5.086,
+   "ridership": 15143561.0
+  },
+  {
+   "fare_class_category": "Metrocard - Students",
+   "baris": 144,
+   "pct": 0.0,
+   "ridership": 158.0
+  }
+ ],
+ "fare_class_by_year": [
+  {
+   "fare_class_category": "Metrocard - Fair Fare",
+   "baris_2025": 2445478,
+   "baris_2026": 3227,
+   "ridership_2025": 23059119.0,
+   "ridership_2026": 3431.0,
+   "terakhir_muncul": "2026-09-16 07:00:00"
+  },
+  {
+   "fare_class_category": "Metrocard - Full Fare",
+   "baris_2025": 2955920,
+   "baris_2026": 361739,
+   "ridership_2025": 72734594.0,
+   "ridership_2026": 616298.0,
+   "terakhir_muncul": "2026-09-16 23:00:00"
+  },
+  {
+   "fare_class_category": "Metrocard - Other",
+   "baris_2025": 3166445,
+   "baris_2026": 1804154,
+   "ridership_2025": 36917451.0,
+   "ridership_2026": 9201323.0,
+   "terakhir_muncul": "2026-09-16 23:00:00"
+  },
+  {
+   "fare_class_category": "Metrocard - Seniors & Disability",
+   "baris_2025": 2111556,
+   "baris_2026": 189419,
+   "ridership_2025": 14884482.0,
+   "ridership_2026": 259079.0,
+   "terakhir_muncul": "2026-09-16 23:00:00"
+  },
+  {
+   "fare_class_category": "Metrocard - Students",
+   "baris_2025": 97,
+   "baris_2026": 47,
+   "ridership_2025": 103.0,
+   "ridership_2026": 55.0,
+   "terakhir_muncul": "2026-08-26 02:00:00"
+  },
+  {
+   "fare_class_category": "Metrocard - Unlimited 30-Day",
+   "baris_2025": 3093435,
+   "baris_2026": 714231,
+   "ridership_2025": 60621895.0,
+   "ridership_2026": 1559343.0,
+   "terakhir_muncul": "2026-09-16 08:00:00"
+  },
+  {
+   "fare_class_category": "Metrocard - Unlimited 7-Day",
+   "baris_2025": 3040835,
+   "baris_2026": 286082,
+   "ridership_2025": 55551758.0,
+   "ridership_2026": 489572.0,
+   "terakhir_muncul": "2026-08-31 23:00:00"
+  },
+  {
+   "fare_class_category": "OMNY - Fair Fare",
+   "baris_2025": 2292080,
+   "baris_2026": 2300773,
+   "ridership_2025": 23482665.0,
+   "ridership_2026": 37925739.0,
+   "terakhir_muncul": "2026-09-16 23:00:00"
+  },
+  {
+   "fare_class_category": "OMNY - Full Fare",
+   "baris_2025": 3615394,
+   "baris_2026": 2598532,
+   "ridership_2025": 878860900.0,
+   "ridership_2026": 757377007.0,
+   "terakhir_muncul": "2026-09-16 23:00:00"
+  },
+  {
+   "fare_class_category": "OMNY - Other",
+   "baris_2025": 1811148,
+   "baris_2026": 2059464,
+   "ridership_2025": 8565728.0,
+   "ridership_2026": 21672972.0,
+   "terakhir_muncul": "2026-09-16 23:00:00"
+  },
+  {
+   "fare_class_category": "OMNY - Seniors & Disability",
+   "baris_2025": 2859587,
+   "baris_2026": 2241710,
+   "ridership_2025": 47917673.0,
+   "ridership_2026": 52483732.0,
+   "terakhir_muncul": "2026-09-16 23:00:00"
+  },
+  {
+   "fare_class_category": "OMNY - Students",
+   "baris_2025": 3079806,
+   "baris_2026": 2212568,
+   "ridership_2025": 81038456.0,
+   "ridership_2026": 53763276.0,
+   "terakhir_muncul": "2026-09-16 23:00:00"
+  }
+ ],
+ "top_station_rows": [
+  {
+   "station_complex_id": "611",
+   "station_complex": "Times Sq-42 St/Port Authority Bus Terminal (1,2,3,7,A,C,E,N,Q,R,W,S)",
+   "baris": 146369
+  },
+  {
+   "station_complex_id": "607",
+   "station_complex": "34 St-Herald Sq (B,D,F,M,N,Q,R,W)",
+   "baris": 141470
+  },
+  {
+   "station_complex_id": "616",
+   "station_complex": "Jackson Hts-Roosevelt Av/74 St-Broadway (7,E,F,M,R)",
+   "baris": 139317
+  },
+  {
+   "station_complex_id": "610",
+   "station_complex": "Grand Central-42 St (4,5,6,7,S)",
+   "baris": 139015
+  },
+  {
+   "station_complex_id": "602",
+   "station_complex": "14 St-Union Sq (4,5,6,L,N,Q,R,W)",
+   "baris": 139007
+  },
+  {
+   "station_complex_id": "164",
+   "station_complex": "34 St-Penn Station (A,C,E)",
+   "baris": 138152
+  },
+  {
+   "station_complex_id": "318",
+   "station_complex": "34 St-Penn Station (1,2,3)",
+   "baris": 138051
+  },
+  {
+   "station_complex_id": "279",
+   "station_complex": "Sutphin Blvd-Archer Av-JFK Airport (E,J,Z)",
+   "baris": 137170
+  },
+  {
+   "station_complex_id": "628",
+   "station_complex": "Fulton St (2,3,4,5,A,C,J,Z)",
+   "baris": 136965
+  },
+  {
+   "station_complex_id": "447",
+   "station_complex": "Flushing-Main St (7)",
+   "baris": 136671
+  }
+ ],
+ "station_consistency": [
+  {
+   "n_id": 428,
+   "id_nama_ganda": 0,
+   "id_borough_ganda": 0,
+   "id_koordinat_ganda": 0,
+   "id_mode_ganda": 1
+  }
+ ],
+ "multi_mode_station": [
+  {
+   "station_complex_id": "501",
+   "station_complex": "St George (SIR)",
+   "borough": "Staten Island",
+   "transit_mode": "staten_island_railway",
+   "baris": 116098,
+   "pertama": "2025-01-01 00:00:00",
+   "terakhir": "2026-09-16 23:00:00"
+  },
+  {
+   "station_complex_id": "501",
+   "station_complex": "St George (SIR)",
+   "borough": "Staten Island",
+   "transit_mode": "subway",
+   "baris": 2,
+   "pertama": "2026-06-18 14:00:00",
+   "terakhir": "2026-09-08 13:00:00"
+  }
+ ],
+ "stations_partial_range": [],
+ "grid_density": [
+  {
+   "baris_ada": 45243727,
+   "kombinasi_teoritis": 76911600,
+   "pct_terisi": 58.83
+  }
+ ],
+ "names_multi_id": [],
+ "coords_multi_id": [],
+ "georef_mismatch": [
+  {
+   "tidak_cocok_string": 0
+  }
+ ],
+ "stats_ridership": {
+  "kolom": "ridership",
+  "min": 1.0,
+  "max": 23510.0,
+  "mean": 49.48722838416915,
+  "std": 241.8617492621395,
+  "median": 7.0,
+  "p95": 188.0,
+  "p99": 785.0,
+  "n_nol": 0,
+  "n_negatif": 0,
+  "n_non_integer": 0,
+  "total": 2238986651.0
+ },
+ "stats_transfers": {
+  "kolom": "transfers",
+  "min": -30.0,
+  "max": 2556.0,
+  "mean": 2.470350442172901,
+  "std": 17.736382254524337,
+  "median": 0.0,
+  "p95": 9.0,
+  "p99": 41.0,
+  "n_nol": 31804196,
+  "n_negatif": 226,
+  "n_non_integer": 0,
+  "total": 111767861.0
+ },
+ "transfers_gt_ridership": [
+  {
+   "n": 0
+  }
+ ],
+ "neg_transfers": [
+  {
+   "transfers": -30.0,
+   "baris": 1
+  },
+  {
+   "transfers": -5.0,
+   "baris": 1
+  },
+  {
+   "transfers": -3.0,
+   "baris": 3
+  },
+  {
+   "transfers": -2.0,
+   "baris": 23
+  },
+  {
+   "transfers": -1.0,
+   "baris": 198
+  }
+ ],
+ "neg_transfer_examples": [
+  {
+   "transit_timestamp": "2026-07-26 14:00:00",
+   "transit_mode": "subway",
+   "station_complex_id": "601",
+   "station_complex": "14 St/6 Av (1,2,3,L,F,M)",
+   "borough": "Manhattan",
+   "payment_method": "omny",
+   "fare_class_category": "OMNY - Other",
+   "ridership": 74.0,
+   "transfers": -30.0
+  },
+  {
+   "transit_timestamp": "2026-06-28 16:00:00",
+   "transit_mode": "subway",
+   "station_complex_id": "601",
+   "station_complex": "14 St/6 Av (1,2,3,L,F,M)",
+   "borough": "Manhattan",
+   "payment_method": "omny",
+   "fare_class_category": "OMNY - Full Fare",
+   "ridership": 4819.0,
+   "transfers": -5.0
+  },
+  {
+   "transit_timestamp": "2026-08-09 00:00:00",
+   "transit_mode": "subway",
+   "station_complex_id": "601",
+   "station_complex": "14 St/6 Av (1,2,3,L,F,M)",
+   "borough": "Manhattan",
+   "payment_method": "omny",
+   "fare_class_category": "OMNY - Full Fare",
+   "ridership": 655.0,
+   "transfers": -3.0
+  },
+  {
+   "transit_timestamp": "2026-08-14 11:00:00",
+   "transit_mode": "subway",
+   "station_complex_id": "601",
+   "station_complex": "14 St/6 Av (1,2,3,L,F,M)",
+   "borough": "Manhattan",
+   "payment_method": "omny",
+   "fare_class_category": "OMNY - Fair Fare",
+   "ridership": 22.0,
+   "transfers": -3.0
+  },
+  {
+   "transit_timestamp": "2026-08-15 19:00:00",
+   "transit_mode": "subway",
+   "station_complex_id": "601",
+   "station_complex": "14 St/6 Av (1,2,3,L,F,M)",
+   "borough": "Manhattan",
+   "payment_method": "omny",
+   "fare_class_category": "OMNY - Full Fare",
+   "ridership": 1763.0,
+   "transfers": -3.0
+  },
+  {
+   "transit_timestamp": "2026-05-22 21:00:00",
+   "transit_mode": "subway",
+   "station_complex_id": "204",
+   "station_complex": "Beach 67 St (A)",
+   "borough": "Queens",
+   "payment_method": "omny",
+   "fare_class_category": "OMNY - Full Fare",
+   "ridership": 23.0,
+   "transfers": -2.0
+  },
+  {
+   "transit_timestamp": "2026-05-26 18:00:00",
+   "transit_mode": "subway",
+   "station_complex_id": "601",
+   "station_complex": "14 St/6 Av (1,2,3,L,F,M)",
+   "borough": "Manhattan",
+   "payment_method": "omny",
+   "fare_class_category": "OMNY - Fair Fare",
+   "ridership": 93.0,
+   "transfers": -2.0
+  },
+  {
+   "transit_timestamp": "2026-05-28 20:00:00",
+   "transit_mode": "subway",
+   "station_complex_id": "204",
+   "station_complex": "Beach 67 St (A)",
+   "borough": "Queens",
+   "payment_method": "omny",
+   "fare_class_category": "OMNY - Fair Fare",
+   "ridership": 4.0,
+   "transfers": -2.0
+  },
+  {
+   "transit_timestamp": "2026-06-02 10:00:00",
+   "transit_mode": "subway",
+   "station_complex_id": "601",
+   "station_complex": "14 St/6 Av (1,2,3,L,F,M)",
+   "borough": "Manhattan",
+   "payment_method": "omny",
+   "fare_class_category": "OMNY - Students",
+   "ridership": 29.0,
+   "transfers": -2.0
+  },
+  {
+   "transit_timestamp": "2026-06-05 00:00:00",
+   "transit_mode": "subway",
+   "station_complex_id": "601",
+   "station_complex": "14 St/6 Av (1,2,3,L,F,M)",
+   "borough": "Manhattan",
+   "payment_method": "omny",
+   "fare_class_category": "OMNY - Fair Fare",
+   "ridership": 22.0,
+   "transfers": -2.0
+  }
+ ],
+ "coord_range": [
+  {
+   "lat_min": 40.576126,
+   "lat_max": 40.903126,
+   "lon_min": -74.07484,
+   "lon_max": -73.7554,
+   "baris_di_luar_bbox_nyc": 0
+  }
+ ],
+ "hourly_pattern": [
+  {
+   "jam": 0,
+   "rata2_total_per_jam": 32857.0,
+   "n_jam": 624
+  },
+  {
+   "jam": 1,
+   "rata2_total_per_jam": 14626.0,
+   "n_jam": 624
+  },
+  {
+   "jam": 2,
+   "rata2_total_per_jam": 8822.0,
+   "n_jam": 623
+  },
+  {
+   "jam": 3,
+   "rata2_total_per_jam": 8456.0,
+   "n_jam": 624
+  },
+  {
+   "jam": 4,
+   "rata2_total_per_jam": 17942.0,
+   "n_jam": 624
+  },
+  {
+   "jam": 5,
+   "rata2_total_per_jam": 54914.0,
+   "n_jam": 624
+  },
+  {
+   "jam": 6,
+   "rata2_total_per_jam": 119272.0,
+   "n_jam": 624
+  },
+  {
+   "jam": 7,
+   "rata2_total_per_jam": 225266.0,
+   "n_jam": 624
+  },
+  {
+   "jam": 8,
+   "rata2_total_per_jam": 288869.0,
+   "n_jam": 624
+  },
+  {
+   "jam": 9,
+   "rata2_total_per_jam": 203367.0,
+   "n_jam": 624
+  },
+  {
+   "jam": 10,
+   "rata2_total_per_jam": 154615.0,
+   "n_jam": 624
+  },
+  {
+   "jam": 11,
+   "rata2_total_per_jam": 152644.0,
+   "n_jam": 624
+  },
+  {
+   "jam": 12,
+   "rata2_total_per_jam": 165852.0,
+   "n_jam": 624
+  },
+  {
+   "jam": 13,
+   "rata2_total_per_jam": 184223.0,
+   "n_jam": 624
+  },
+  {
+   "jam": 14,
+   "rata2_total_per_jam": 215991.0,
+   "n_jam": 624
+  },
+  {
+   "jam": 15,
+   "rata2_total_per_jam": 257755.0,
+   "n_jam": 624
+  },
+  {
+   "jam": 16,
+   "rata2_total_per_jam": 292302.0,
+   "n_jam": 624
+  },
+  {
+   "jam": 17,
+   "rata2_total_per_jam": 340721.0,
+   "n_jam": 624
+  },
+  {
+   "jam": 18,
+   "rata2_total_per_jam": 263867.0,
+   "n_jam": 624
+  },
+  {
+   "jam": 19,
+   "rata2_total_per_jam": 180014.0,
+   "n_jam": 624
+  },
+  {
+   "jam": 20,
+   "rata2_total_per_jam": 136724.0,
+   "n_jam": 624
+  },
+  {
+   "jam": 21,
+   "rata2_total_per_jam": 115067.0,
+   "n_jam": 624
+  },
+  {
+   "jam": 22,
+   "rata2_total_per_jam": 94221.0,
+   "n_jam": 624
+  },
+  {
+   "jam": 23,
+   "rata2_total_per_jam": 59745.0,
+   "n_jam": 624
+  }
+ ],
+ "dow_pattern": [
+  {
+   "isodow": 1,
+   "hari_nama": "Monday",
+   "rata2_total_harian": 3664382.0,
+   "n_hari": 89
+  },
+  {
+   "isodow": 2,
+   "hari_nama": "Tuesday",
+   "rata2_total_harian": 4207297.0,
+   "n_hari": 89
+  },
+  {
+   "isodow": 3,
+   "hari_nama": "Wednesday",
+   "rata2_total_harian": 4244522.0,
+   "n_hari": 90
+  },
+  {
+   "isodow": 4,
+   "hari_nama": "Thursday",
+   "rata2_total_harian": 4174858.0,
+   "n_hari": 89
+  },
+  {
+   "isodow": 5,
+   "hari_nama": "Friday",
+   "rata2_total_harian": 3900886.0,
+   "n_hari": 89
+  },
+  {
+   "isodow": 6,
+   "hari_nama": "Saturday",
+   "rata2_total_harian": 2751006.0,
+   "n_hari": 89
+  },
+  {
+   "isodow": 7,
+   "hari_nama": "Sunday",
+   "rata2_total_harian": 2166511.0,
+   "n_hari": 89
+  }
+ ],
+ "top10_stations": [
+  {
+   "station_complex_id": "611",
+   "station_complex": "Times Sq-42 St/Port Authority Bus Terminal (1,2,3,7,A,C,E,N,Q,R,W,S)",
+   "borough": "Manhattan",
+   "total_ridership": 82909182.0,
+   "pct": 3.7
+  },
+  {
+   "station_complex_id": "610",
+   "station_complex": "Grand Central-42 St (4,5,6,7,S)",
+   "borough": "Manhattan",
+   "total_ridership": 62766842.0,
+   "pct": 2.8
+  },
+  {
+   "station_complex_id": "607",
+   "station_complex": "34 St-Herald Sq (B,D,F,M,N,Q,R,W)",
+   "borough": "Manhattan",
+   "total_ridership": 45318790.0,
+   "pct": 2.02
+  },
+  {
+   "station_complex_id": "602",
+   "station_complex": "14 St-Union Sq (4,5,6,L,N,Q,R,W)",
+   "borough": "Manhattan",
+   "total_ridership": 41856785.0,
+   "pct": 1.87
+  },
+  {
+   "station_complex_id": "164",
+   "station_complex": "34 St-Penn Station (A,C,E)",
+   "borough": "Manhattan",
+   "total_ridership": 35583237.0,
+   "pct": 1.59
+  },
+  {
+   "station_complex_id": "628",
+   "station_complex": "Fulton St (2,3,4,5,A,C,J,Z)",
+   "borough": "Manhattan",
+   "total_ridership": 35015962.0,
+   "pct": 1.56
+  },
+  {
+   "station_complex_id": "318",
+   "station_complex": "34 St-Penn Station (1,2,3)",
+   "borough": "Manhattan",
+   "total_ridership": 30971722.0,
+   "pct": 1.38
+  },
+  {
+   "station_complex_id": "614",
+   "station_complex": "59 St-Columbus Circle (1,A,C,B,D)",
+   "borough": "Manhattan",
+   "total_ridership": 29697655.0,
+   "pct": 1.33
+  },
+  {
+   "station_complex_id": "447",
+   "station_complex": "Flushing-Main St (7)",
+   "borough": "Queens",
+   "total_ridership": 25770493.0,
+   "pct": 1.15
+  },
+  {
+   "station_complex_id": "616",
+   "station_complex": "Jackson Hts-Roosevelt Av/74 St-Broadway (7,E,F,M,R)",
+   "borough": "Queens",
+   "total_ridership": 25638542.0,
+   "pct": 1.15
+  }
+ ],
+ "profile_seconds": 21.4,
+ "peak_rss_bytes": 9417310208
+}

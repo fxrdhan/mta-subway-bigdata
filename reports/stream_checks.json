@@ -1,0 +1,543 @@
+{
+ "api_fields_types": {
+  "transit_timestamp": "floating_timestamp",
+  "transit_mode": "text",
+  "station_complex_id": "text",
+  "station_complex": "text",
+  "borough": "text",
+  "payment_method": "text",
+  "fare_class_category": "text",
+  "ridership": "number",
+  "transfers": "number",
+  "latitude": "number",
+  "longitude": "number",
+  "georeference": "point"
+ },
+ "api_system_fields": [
+  ":id",
+  ":created_at",
+  ":updated_at",
+  ":version"
+ ],
+ "api_json_sample_row": {
+  "transit_timestamp": "2025-05-23T00:00:00.000",
+  "transit_mode": "subway",
+  "station_complex_id": "100",
+  "station_complex": "Hewes St (M,J)",
+  "borough": "Brooklyn",
+  "payment_method": "omny",
+  "fare_class_category": "OMNY - Full Fare",
+  "ridership": "12.0",
+  "transfers": "0.0",
+  "latitude": "40.70687",
+  "longitude": "-73.95343",
+  "georeference": {
+   "type": "Point",
+   "coordinates": [
+    -73.95343,
+    40.70687
+   ]
+  }
+ },
+ "schema_equal_snapshot_vs_stream": true,
+ "names_equal_api_vs_parquet": true,
+ "dryrun_by_day": [
+  {
+   "hari": "2026-09-14",
+   "baris": 52646,
+   "ridership_null": 0,
+   "ridership_min": 1.0,
+   "ridership_max": 16722.0,
+   "ridership_total": 4214072.0,
+   "transfers_null": 0,
+   "stasiun": 428
+  },
+  {
+   "hari": "2026-09-15",
+   "baris": 52932,
+   "ridership_null": 0,
+   "ridership_min": 1.0,
+   "ridership_max": 19851.0,
+   "ridership_total": 4590442.0,
+   "transfers_null": 0,
+   "stasiun": 428
+  },
+  {
+   "hari": "2026-09-16",
+   "baris": 53053,
+   "ridership_null": 0,
+   "ridership_min": 1.0,
+   "ridership_max": 19452.0,
+   "ridership_total": 4624064.0,
+   "transfers_null": 0,
+   "stasiun": 428
+  }
+ ],
+ "stream_vs_snapshot_window": {
+  "from": "2026-09-14 00:00:00",
+  "to": "2026-09-16 23:00:00",
+  "stream_minus_snapshot": 0,
+  "snapshot_minus_stream": 0,
+  "snapshot_rows_in_window": 158631
+ },
+ "latency": {
+  "server_max_ts_local": "2026-09-16T23:00:00.000",
+  "now_utc": "2026-09-29T13:20:27+00:00",
+  "now_new_york": "2026-09-29T09:20:27-04:00",
+  "lag_now_vs_data_end_hours": 297.3,
+  "rowsUpdatedAt_utc": "2026-09-23T14:46:21+00:00",
+  "rowsUpdatedAt_weekday": "Wednesday",
+  "lag_publish_vs_data_end_hours": 154.8,
+  "since_last_publish_hours": 142.6
+ },
+ "update_evidence": {
+  "metadata_posting_frequency": "Weekly",
+  "catalog_data_updated_at": "2026-09-23T14:46:21.000Z",
+  "catalog_metadata_updated_at": "2026-09-23T14:34:34.000Z",
+  "wayback": {
+   "status": "TIDAK TERVERIFIKASI: Wayback Machine tidak bisa dipakai (ReadTimeout: HTTPConnectionPool(host='web.archive.org', port=80): Read timed out. (read timeout=20))"
+  },
+  "created_at_loads": {
+   "n_distinct_created_at": 29,
+   "first_bulk_load": "2026-03-11T20:54:49.421Z",
+   "first_bulk_rows": 34103810,
+   "weekly_gap_days_min": 6.95,
+   "weekly_gap_days_max": 7.05,
+   "weekdays_new_york": [
+    "Wednesday"
+   ],
+   "hour_utc_min": 14,
+   "hour_utc_max": 15,
+   "last_load": "2026-09-23T14:34:35.606Z"
+  },
+  "created_at_filter_check": {
+   "where_after": "2026-09-16T14:35:29.494Z",
+   "count": 306481,
+   "expected_last_load": 306481
+  }
+ },
+ "late_arrival": {
+  "rows_in_weekly_loads": 11139917,
+  "late_rows": 749386,
+  "pct_late": 6.73,
+  "loads_with_over_5pct_late": 9,
+  "n_loads": 28,
+  "definition": "baris rilis mingguan dengan transit_timestamp > 6 hari lebih tua dari timestamp terbaru rilis yang sama",
+  "per_load": [
+   {
+    "created_at": "2026-03-18T14:55:10.801Z",
+    "rows": 542541,
+    "late_rows": 124112,
+    "pct_late": 22.9,
+    "oldest_day": "2025-11-14",
+    "newest_day": "2026-03-11"
+   },
+   {
+    "created_at": "2026-03-25T14:56:50.572Z",
+    "rows": 124374,
+    "late_rows": 3,
+    "pct_late": 0.0,
+    "oldest_day": "2025-11-21",
+    "newest_day": "2026-03-13"
+   },
+   {
+    "created_at": "2026-04-01T14:53:01.671Z",
+    "rows": 612086,
+    "late_rows": 294988,
+    "pct_late": 48.2,
+    "oldest_day": "2025-11-28",
+    "newest_day": "2026-03-25"
+   },
+   {
+    "created_at": "2026-04-08T14:39:52.588Z",
+    "rows": 409063,
+    "late_rows": 133,
+    "pct_late": 0.0,
+    "oldest_day": "2025-12-01",
+    "newest_day": "2026-03-31"
+   },
+   {
+    "created_at": "2026-04-15T15:56:50.247Z",
+    "rows": 441792,
+    "late_rows": 37600,
+    "pct_late": 8.5,
+    "oldest_day": "2025-12-10",
+    "newest_day": "2026-04-07"
+   },
+   {
+    "created_at": "2026-04-22T14:38:05.399Z",
+    "rows": 463046,
+    "late_rows": 60466,
+    "pct_late": 13.1,
+    "oldest_day": "2025-12-18",
+    "newest_day": "2026-04-15"
+   },
+   {
+    "created_at": "2026-04-29T14:36:30.018Z",
+    "rows": 400790,
+    "late_rows": 40,
+    "pct_late": 0.0,
+    "oldest_day": "2026-01-21",
+    "newest_day": "2026-04-22"
+   },
+   {
+    "created_at": "2026-05-06T14:38:01.921Z",
+    "rows": 392237,
+    "late_rows": 135,
+    "pct_late": 0.0,
+    "oldest_day": "2025-12-29",
+    "newest_day": "2026-04-29"
+   },
+   {
+    "created_at": "2026-05-13T15:18:20.342Z",
+    "rows": 348361,
+    "late_rows": 818,
+    "pct_late": 0.2,
+    "oldest_day": "2026-02-23",
+    "newest_day": "2026-05-05"
+   },
+   {
+    "created_at": "2026-05-20T14:49:21.483Z",
+    "rows": 461816,
+    "late_rows": 59376,
+    "pct_late": 12.9,
+    "oldest_day": "2026-01-16",
+    "newest_day": "2026-05-13"
+   },
+   {
+    "created_at": "2026-05-27T14:43:42.414Z",
+    "rows": 403115,
+    "late_rows": 1259,
+    "pct_late": 0.3,
+    "oldest_day": "2026-01-27",
+    "newest_day": "2026-05-20"
+   },
+   {
+    "created_at": "2026-06-03T14:39:28.253Z",
+    "rows": 386125,
+    "late_rows": 473,
+    "pct_late": 0.1,
+    "oldest_day": "2026-01-26",
+    "newest_day": "2026-05-27"
+   },
+   {
+    "created_at": "2026-06-10T14:41:11.135Z",
+    "rows": 393444,
+    "late_rows": 31,
+    "pct_late": 0.0,
+    "oldest_day": "2026-02-04",
+    "newest_day": "2026-06-03"
+   },
+   {
+    "created_at": "2026-06-17T14:34:41.100Z",
+    "rows": 396989,
+    "late_rows": 2995,
+    "pct_late": 0.8,
+    "oldest_day": "2026-02-08",
+    "newest_day": "2026-06-10"
+   },
+   {
+    "created_at": "2026-06-24T15:20:35.042Z",
+    "rows": 395680,
+    "late_rows": 388,
+    "pct_late": 0.1,
+    "oldest_day": "2026-03-25",
+    "newest_day": "2026-06-17"
+   },
+   {
+    "created_at": "2026-07-01T14:37:09.813Z",
+    "rows": 386217,
+    "late_rows": 1830,
+    "pct_late": 0.5,
+    "oldest_day": "2026-02-23",
+    "newest_day": "2026-06-24"
+   },
+   {
+    "created_at": "2026-07-08T14:33:48.731Z",
+    "rows": 368935,
+    "late_rows": 206,
+    "pct_late": 0.1,
+    "oldest_day": "2026-02-28",
+    "newest_day": "2026-07-01"
+   },
+   {
+    "created_at": "2026-07-15T14:35:30.904Z",
+    "rows": 375460,
+    "late_rows": 21452,
+    "pct_late": 5.7,
+    "oldest_day": "2026-03-08",
+    "newest_day": "2026-07-08"
+   },
+   {
+    "created_at": "2026-07-22T14:34:34.025Z",
+    "rows": 417652,
+    "late_rows": 27783,
+    "pct_late": 6.7,
+    "oldest_day": "2026-04-21",
+    "newest_day": "2026-07-15"
+   },
+   {
+    "created_at": "2026-07-29T14:38:10.449Z",
+    "rows": 389543,
+    "late_rows": 19,
+    "pct_late": 0.0,
+    "oldest_day": "2026-03-30",
+    "newest_day": "2026-07-22"
+   },
+   {
+    "created_at": "2026-08-05T14:38:24.989Z",
+    "rows": 393890,
+    "late_rows": 240,
+    "pct_late": 0.1,
+    "oldest_day": "2026-04-25",
+    "newest_day": "2026-07-29"
+   },
+   {
+    "created_at": "2026-08-12T14:39:48.285Z",
+    "rows": 399082,
+    "late_rows": 1735,
+    "pct_late": 0.4,
+    "oldest_day": "2026-04-13",
+    "newest_day": "2026-08-05"
+   },
+   {
+    "created_at": "2026-08-19T14:34:31.759Z",
+    "rows": 448893,
+    "late_rows": 58239,
+    "pct_late": 13.0,
+    "oldest_day": "2026-04-12",
+    "newest_day": "2026-08-13"
+   },
+   {
+    "created_at": "2026-08-26T14:32:08.290Z",
+    "rows": 380900,
+    "late_rows": 28,
+    "pct_late": 0.0,
+    "oldest_day": "2026-06-16",
+    "newest_day": "2026-08-20"
+   },
+   {
+    "created_at": "2026-09-02T14:35:32.072Z",
+    "rows": 382476,
+    "late_rows": 1421,
+    "pct_late": 0.4,
+    "oldest_day": "2026-04-30",
+    "newest_day": "2026-08-27"
+   },
+   {
+    "created_at": "2026-09-09T14:37:06.995Z",
+    "rows": 319724,
+    "late_rows": 1450,
+    "pct_late": 0.5,
+    "oldest_day": "2026-05-06",
+    "newest_day": "2026-09-02"
+   },
+   {
+    "created_at": "2026-09-16T14:35:29.494Z",
+    "rows": 399205,
+    "late_rows": 51900,
+    "pct_late": 13.0,
+    "oldest_day": "2026-05-30",
+    "newest_day": "2026-09-10"
+   },
+   {
+    "created_at": "2026-09-23T14:34:35.606Z",
+    "rows": 306481,
+    "late_rows": 266,
+    "pct_late": 0.1,
+    "oldest_day": "2026-07-03",
+    "newest_day": "2026-09-16"
+   }
+  ]
+ },
+ "revisions": {
+  "all_updated_at_equal_a_weekly_created_at": true,
+  "releases_touching_le_8_day_window": 25,
+  "releases_touching_wider_window": 3,
+  "rows_updated_after_created": 18446485,
+  "pct_of_total": 40.8,
+  "n_distinct_updated_at": 28,
+  "largest_batch": {
+   "updated_at": "2026-09-23T14:34:35.606Z",
+   "min_ts": "2026-05-16T00:00:00.000",
+   "max_ts": "2026-09-10T23:00:00.000",
+   "n": "6514568"
+  },
+  "per_updated_at": [
+   {
+    "updated_at": "2026-03-18T14:55:10.801Z",
+    "min_ts": "2025-11-08T00:00:00.000",
+    "max_ts": "2025-11-14T23:00:00.000",
+    "n": "558805"
+   },
+   {
+    "updated_at": "2026-03-25T14:56:50.572Z",
+    "min_ts": "2025-11-15T00:00:00.000",
+    "max_ts": "2025-11-21T23:00:00.000",
+    "n": "549176"
+   },
+   {
+    "updated_at": "2026-04-01T14:53:01.671Z",
+    "min_ts": "2025-11-22T00:00:00.000",
+    "max_ts": "2025-11-28T23:00:00.000",
+    "n": "526884"
+   },
+   {
+    "updated_at": "2026-04-08T14:39:52.588Z",
+    "min_ts": "2025-11-29T00:00:00.000",
+    "max_ts": "2025-12-05T23:00:00.000",
+    "n": "526521"
+   },
+   {
+    "updated_at": "2026-04-15T15:56:50.247Z",
+    "min_ts": "2025-12-06T00:00:00.000",
+    "max_ts": "2025-12-12T23:00:00.000",
+    "n": "518700"
+   },
+   {
+    "updated_at": "2026-04-22T14:38:05.399Z",
+    "min_ts": "2025-12-13T00:00:00.000",
+    "max_ts": "2025-12-19T23:00:00.000",
+    "n": "505453"
+   },
+   {
+    "updated_at": "2026-04-29T14:36:30.018Z",
+    "min_ts": "2025-12-20T00:00:00.000",
+    "max_ts": "2025-12-26T23:00:00.000",
+    "n": "470410"
+   },
+   {
+    "updated_at": "2026-05-06T14:38:01.921Z",
+    "min_ts": "2025-12-27T00:00:00.000",
+    "max_ts": "2026-01-02T23:00:00.000",
+    "n": "447415"
+   },
+   {
+    "updated_at": "2026-05-13T15:18:20.342Z",
+    "min_ts": "2026-01-03T00:00:00.000",
+    "max_ts": "2026-01-09T23:00:00.000",
+    "n": "435045"
+   },
+   {
+    "updated_at": "2026-05-20T14:49:21.483Z",
+    "min_ts": "2026-01-10T00:00:00.000",
+    "max_ts": "2026-01-16T23:00:00.000",
+    "n": "427511"
+   },
+   {
+    "updated_at": "2026-05-27T14:43:42.414Z",
+    "min_ts": "2026-01-17T00:00:00.000",
+    "max_ts": "2026-01-23T23:00:00.000",
+    "n": "410464"
+   },
+   {
+    "updated_at": "2026-06-03T14:39:28.253Z",
+    "min_ts": "2026-01-24T00:00:00.000",
+    "max_ts": "2026-01-30T23:00:00.000",
+    "n": "407164"
+   },
+   {
+    "updated_at": "2026-06-10T14:41:11.135Z",
+    "min_ts": "2026-01-31T00:00:00.000",
+    "max_ts": "2026-02-06T23:00:00.000",
+    "n": "423744"
+   },
+   {
+    "updated_at": "2026-06-17T14:34:41.100Z",
+    "min_ts": "2026-02-07T00:00:00.000",
+    "max_ts": "2026-02-13T23:00:00.000",
+    "n": "417195"
+   },
+   {
+    "updated_at": "2026-06-24T15:20:35.042Z",
+    "min_ts": "2026-02-14T00:00:00.000",
+    "max_ts": "2026-02-20T23:00:00.000",
+    "n": "414949"
+   },
+   {
+    "updated_at": "2026-07-01T14:37:09.813Z",
+    "min_ts": "2026-02-21T00:00:00.000",
+    "max_ts": "2026-02-27T23:00:00.000",
+    "n": "403047"
+   },
+   {
+    "updated_at": "2026-07-08T14:33:48.731Z",
+    "min_ts": "2026-02-28T00:00:00.000",
+    "max_ts": "2026-03-06T23:00:00.000",
+    "n": "419176"
+   },
+   {
+    "updated_at": "2026-07-15T14:35:30.904Z",
+    "min_ts": "2026-03-07T00:00:00.000",
+    "max_ts": "2026-03-13T23:00:00.000",
+    "n": "419105"
+   },
+   {
+    "updated_at": "2026-07-22T14:34:34.025Z",
+    "min_ts": "2026-03-14T00:00:00.000",
+    "max_ts": "2026-03-20T23:00:00.000",
+    "n": "418955"
+   },
+   {
+    "updated_at": "2026-07-29T14:38:10.449Z",
+    "min_ts": "2026-03-21T00:00:00.000",
+    "max_ts": "2026-07-12T19:00:00.000",
+    "n": "416341"
+   },
+   {
+    "updated_at": "2026-08-05T14:38:24.989Z",
+    "min_ts": "2026-03-28T00:00:00.000",
+    "max_ts": "2026-04-03T23:00:00.000",
+    "n": "404143"
+   },
+   {
+    "updated_at": "2026-08-12T14:39:48.285Z",
+    "min_ts": "2026-04-04T00:00:00.000",
+    "max_ts": "2026-04-10T23:00:00.000",
+    "n": "403121"
+   },
+   {
+    "updated_at": "2026-08-19T14:34:31.759Z",
+    "min_ts": "2026-04-11T00:00:00.000",
+    "max_ts": "2026-04-17T23:00:00.000",
+    "n": "403860"
+   },
+   {
+    "updated_at": "2026-08-26T14:32:08.290Z",
+    "min_ts": "2026-04-18T00:00:00.000",
+    "max_ts": "2026-04-24T23:00:00.000",
+    "n": "400269"
+   },
+   {
+    "updated_at": "2026-09-02T14:35:32.072Z",
+    "min_ts": "2026-04-25T00:00:00.000",
+    "max_ts": "2026-05-01T23:00:00.000",
+    "n": "397018"
+   },
+   {
+    "updated_at": "2026-09-09T14:37:06.995Z",
+    "min_ts": "2026-05-02T00:00:00.000",
+    "max_ts": "2026-05-08T23:00:00.000",
+    "n": "403794"
+   },
+   {
+    "updated_at": "2026-09-16T14:35:29.494Z",
+    "min_ts": "2026-05-09T00:00:00.000",
+    "max_ts": "2026-09-01T21:00:00.000",
+    "n": "403652"
+   },
+   {
+    "updated_at": "2026-09-23T14:34:35.606Z",
+    "min_ts": "2026-05-16T00:00:00.000",
+    "max_ts": "2026-09-10T23:00:00.000",
+    "n": "6514568"
+   }
+  ],
+  "updated_at_filter_check": {
+   "where_after": "2026-09-16T14:35:29.494Z",
+   "count": 6821049,
+   "expected_last_load_new_rows_plus_touched": 6821049
+  },
+  "values_changed": "TIDAK TERVERIFIKASI: metadata hanya menunjukkan baris disentuh ulang, bukan apakah nilainya berubah; bandingkan sidik jari harian (src/verify_snapshot_values.py) antar rilis"
+ }
+}

@@ -1,0 +1,9 @@
+{
+  "checked_at_utc": "2026-09-29T13:23:32+00:00",
+  "cutoff_ts": "2026-09-16T23:00:00",
+  "parquet_rows": 45243727,
+  "parquet_min_ts": "2025-01-01 00:00:00",
+  "parquet_max_ts": "2026-09-16 23:00:00",
+  "server_rows_le_cutoff_now": 45243727,
+  "match": true
+}

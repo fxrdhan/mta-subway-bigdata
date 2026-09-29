@@ -1,0 +1,38 @@
+# Large data files
+data/parquet/*
+!data/parquet/.gitkeep
+data/raw/*
+!data/raw/.gitkeep
+data/stream/*
+!data/stream/.gitkeep
+data/_dryrun_stream/*
+!data/_dryrun_stream/.gitkeep
+
+# Ignore large sample CSV/JSON, keep small sample parquet
+data/sample/*.csv
+data/sample/*.json
+!data/sample/.gitkeep
+!data/sample/*.parquet
+
+# Keep state tracking and logs folder
+!data/state/**
+logs/*.log
+!logs/.gitkeep
+
+# Python environments and cache
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# System & IDE files
+.DS_Store
+.idea/
+.vscode/
+
+# Ignore markdown files except README.md
+PROPOSAL_TUGAS.md
+big-data-case-studies-2026.md
+docs/*.md
+reports/*.md

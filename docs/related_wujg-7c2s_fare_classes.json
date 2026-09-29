@@ -1,0 +1,12 @@
+[{"payment_method":"metrocard","fare_class_category":"Metrocard - Fair Fare","n":"14571179"}
+,{"payment_method":"metrocard","fare_class_category":"Metrocard - Full Fare","n":"17235757"}
+,{"payment_method":"metrocard","fare_class_category":"Metrocard - Other","n":"15715114"}
+,{"payment_method":"metrocard","fare_class_category":"Metrocard - Seniors & Disability","n":"13550762"}
+,{"payment_method":"metrocard","fare_class_category":"Metrocard - Students","n":"7136736"}
+,{"payment_method":"metrocard","fare_class_category":"Metrocard - Unlimited 30-Day","n":"16316225"}
+,{"payment_method":"metrocard","fare_class_category":"Metrocard - Unlimited 7-Day","n":"16873380"}
+,{"payment_method":"omny","fare_class_category":"OMNY - Fair Fare","n":"2678"}
+,{"payment_method":"omny","fare_class_category":"OMNY - Full Fare","n":"15515503"}
+,{"payment_method":"omny","fare_class_category":"OMNY - Other","n":"834877"}
+,{"payment_method":"omny","fare_class_category":"OMNY - Seniors & Disability","n":"2111518"}
+,{"payment_method":"omny","fare_class_category":"OMNY - Students","n":"991838"}]

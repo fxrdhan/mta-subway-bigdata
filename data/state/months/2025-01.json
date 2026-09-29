@@ -1,0 +1,11 @@
+{
+  "month": "2025-01",
+  "status": "complete",
+  "rows": 2398982,
+  "server_rows": 2398982,
+  "cutoff_ts": "2026-09-16T23:00:00",
+  "file": "data/parquet/year=2025/month=01/part-0.parquet",
+  "bytes": 6207844,
+  "download_seconds": 49.8,
+  "finished_at_utc": "2026-09-29T12:52:57+00:00"
+}
