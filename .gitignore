@@ -36,3 +36,16 @@ PROPOSAL_TUGAS.md
 big-data-case-studies-2026.md
 docs/*.md
 reports/*.md
+
+# Dataset final hasil gathering (besar; dibagikan lewat Google Drive)
+data/final/*
+!data/final/.gitkeep
+
+# Claude worktrees and metadata
+.claude/
+
+# Temporary Microsoft Office files
+~$*
+
+# Root working copies of task documents (official files tracked under docs/)
+/TugasMinggu3*
