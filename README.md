@@ -255,58 +255,55 @@ Dataset final ini menjadi masukan tahap *assessing* dan *cleaning* (bagian IV).
 
 ### 8. Bukti Pelaksanaan di Google Colab
 
-Gambar berikut diambil dari eksekusi notebook Minggu 3 di Google Colab (30 September 2026), sebelum pembaruan data MTA pada hari yang sama. Karena itu angkanya mengikuti *snapshot* saat itu (45.243.727 baris) dan masih memuat ringkasan validasi lama (bagian 9.3). Angka terkini ada pada bagian-bagian di atas dan pada notebook.
+Gambar berikut sama dengan gambar pada laporan tugas Minggu 3 ([PDF](docs/TugasMinggu3_BIG-DATA_TK47G06_101032330094-101032300131.pdf)). Gambar diambil dari eksekusi notebook di Google Colab sebelum pembaruan data MTA 30 September 2026, sehingga angkanya mengikuti *snapshot* saat itu (45.243.727 baris). Angka terkini ada pada bagian-bagian di atas dan pada notebook.
 
 ![Gambar 1](docs/screenshots/01_metadata_dataset.jpg)
-*Gambar 1. Metadata dataset dari endpoint `/api/views` (nama, pemilik, frekuensi pembaruan, lisensi kosong).*
+*Gambar 1. Metadata dataset dari endpoint `/api/views`.*
 
 ![Gambar 2](docs/screenshots/02_respons_json_mentah.jpg)
-*Gambar 2. Bentuk mentah respons JSON: seluruh angka bertipe teks dan `georeference` berupa objek GeoJSON.*
+*Gambar 2. Bentuk mentah respons JSON.*
 
-![Gambar 3](docs/screenshots/03_fiksasi_cutoff.jpg)
-*Gambar 3. Fiksasi *snapshot*: baris di server sampai *cutoff* (45.243.727) sama dengan nilai acuan dan tidak ada baris setelah *cutoff*.*
+![Gambar 3](docs/screenshots/03_dimensi_tipe.jpg)
+*Gambar 3. Dimensi dan tipe data dataset final.*
 
-![Gambar 4](docs/screenshots/04_rencana_per_bulan.jpg)
-*Gambar 4. Rencana pengambilan: jumlah hari dan baris per bulan dari agregasi server.*
+![Gambar 4](docs/screenshots/04_nilai_kosong_unik.jpg)
+*Gambar 4. Jumlah nilai kosong (0 pada seluruh kolom) dan jumlah nilai unik kolom teks.*
 
-![Gambar 5](docs/screenshots/05_grafik_baris.jpg)
-*Gambar 5. Jumlah baris per bulan dan per hari.*
+![Gambar 5](docs/screenshots/05_statistik_cakupan_waktu.jpg)
+*Gambar 5. Statistik kolom numerik dan cakupan waktu.*
 
-![Gambar 6](docs/screenshots/06_unduh_paralel.jpg)
-*Gambar 6. Pengambilan 624 hari secara paralel: 624 dari 624 hari berhasil dalam 10,6 menit, 0 gagal.*
+![Gambar 6](docs/screenshots/06_temuan_awal.jpg)
+*Gambar 6. Temuan awal yaitu jam yang tidak muncul, `transfers` negatif, dan stasiun dengan dua moda.*
 
-![Gambar 7](docs/screenshots/07_ringkasan_unduhan.jpg)
-*Gambar 7. Ringkasan pengambilan: total baris terkumpul sama dengan total menurut server.*
+![Gambar 7](docs/screenshots/07_fiksasi_cutoff.jpg)
+*Gambar 7. Jumlah baris sampai *cutoff* sama dengan nilai acuan.*
 
-![Gambar 8](docs/screenshots/08_penggabungan_bulanan.jpg)
-*Gambar 8. Penggabungan harian → bulanan (21 file): jumlah baris tiap bulan sama dengan server.*
+![Gambar 8](docs/screenshots/08_rencana_per_bulan.jpg)
+*Gambar 8. Rencana pengambilan adalah jumlah hari dan baris per bulan.*
 
-![Gambar 9](docs/screenshots/09_file_final.jpg)
-*Gambar 9. Penggabungan bulanan → satu file final.*
+![Gambar 9](docs/screenshots/09_grafik_baris.jpg)
+*Gambar 9. Grafik jumlah baris per bulan dan per hari.*
 
-![Gambar 10](docs/screenshots/10_dimensi_tipe.jpg)
-*Gambar 10. Dimensi dataset final (45.243.727 baris × 12 kolom) dan tipe data.*
+![Gambar 10](docs/screenshots/10_unduh_paralel.jpg)
+*Gambar 10. Pengambilan 624 hari secara paralel beserta ringkasannya.*
 
-![Gambar 11](docs/screenshots/11_contoh_baris_info.jpg)
-*Gambar 11. Contoh lima baris pertama dan ringkasan tipe (`info`) pada sampel acak 100.000 baris.*
+![Gambar 11](docs/screenshots/11_contoh_concat.jpg)
+*Gambar 11. Contoh penggabungan tiga hari pertama dengan `pd.concat`.*
 
-![Gambar 12](docs/screenshots/12_nilai_kosong.jpg)
-*Gambar 12. Pemeriksaan nilai kosong dan string kosong: 0 pada seluruh kolom.*
+![Gambar 12](docs/screenshots/12_penggabungan_bulanan.jpg)
+*Gambar 12. Penggabungan harian ke bulanan.*
 
-![Gambar 13](docs/screenshots/13_temuan_awal.jpg)
-*Gambar 13. Temuan awal untuk tahap berikutnya: 226 baris `transfers` negatif dan satu stasiun dengan dua moda.*
+![Gambar 13](docs/screenshots/13_file_final.jpg)
+*Gambar 13. Penggabungan bulanan ke satu file final.*
 
 ![Gambar 14](docs/screenshots/14_banding_server.jpg)
-*Gambar 14. Perbandingan agregat harian dengan server: 624 hari dibandingkan, 0 hari berbeda.*
+*Gambar 14. Perbandingan agregat harian dengan server.*
 
 ![Gambar 15](docs/screenshots/15_duplikat_urutan.jpg)
-*Gambar 15. Pemeriksaan duplikat kunci dan urutan data: 0 duplikat, 0 baris tidak urut.*
+*Gambar 15. Pemeriksaan duplikat kunci dan urutan data.*
 
-![Gambar 16](docs/screenshots/16_validasi.jpg)
-*Gambar 16. Ringkasan validasi: 10 dari 10 pemeriksaan lulus.*
-
-![Gambar 17](docs/screenshots/17_dataset_akhir.jpg)
-*Gambar 17. Ringkasan dataset akhir hasil *gathering*.*
+![Gambar 16](docs/screenshots/16_dataset_akhir.jpg)
+*Gambar 16. Ringkasan dataset akhir hasil *gathering*.*
 
 ## IV. Data Wrangling – *Assessing* dan *Cleaning Data*
 
