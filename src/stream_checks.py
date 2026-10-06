@@ -1,4 +1,4 @@
-"""Pemeriksaan pasangan streaming: skema API vs Parquet, isi target, lag, frekuensi update.
+"""Pemeriksaan pengambilan inkremental (micro-batch): skema API vs Parquet, isi target, lag, frekuensi update.
 
 Prasyarat: snapshot di data/parquet/ dan hasil dry-run poller di data/_dryrun_stream/.
 Keluaran: reports/stream_checks.md dan reports/stream_checks.json.
@@ -20,7 +20,7 @@ SNAP = str(ROOT / "data" / "parquet" / "*" / "*" / "*.parquet")
 DRY = ROOT / "data" / "_dryrun_stream"
 NY = ZoneInfo("America/New_York")
 out: dict = {}
-md: list[str] = ["# Hasil uji pasangan streaming", ""]
+md: list[str] = ["# Hasil uji pengambilan inkremental", ""]
 
 
 def md_table(cols, rows):
@@ -30,7 +30,7 @@ def md_table(cols, rows):
     md.append("")
 
 
-# 1. Skema API (JSON) vs Parquet snapshot vs Parquet stream ---------------------------------
+# 1. Skema API (JSON) vs Parquet snapshot vs Parquet inkremental ----------------------------
 r = soda.get(soda.RESOURCE + ".json", {"$limit": 1})
 api = dict(zip(json.loads(r.headers["X-SODA2-Fields"]), json.loads(r.headers["X-SODA2-Types"])))
 r_sys = soda.get(soda.RESOURCE + ".json", {"$select": ":*, *", "$limit": 1})
@@ -51,9 +51,9 @@ out["schema_equal_snapshot_vs_stream"] = snap == strm
 out["names_equal_api_vs_parquet"] = list(api) == list(snap)
 md += ["## 1. Skema", "",
        f"- Nama & urutan kolom API JSON == Parquet: **{out['names_equal_api_vs_parquet']}**",
-       f"- Skema Parquet snapshot == Parquet stream (nama+tipe): **{out['schema_equal_snapshot_vs_stream']}**",
+       f"- Skema Parquet snapshot == Parquet inkremental (nama+tipe): **{out['schema_equal_snapshot_vs_stream']}**",
        f"- Kolom sistem API (tidak diunduh): {', '.join(out['api_system_fields'])}", ""]
-md_table(["kolom", "tipe SODA (X-SODA2-Types)", "tipe nilai JSON mentah", "Parquet snapshot", "Parquet stream", "snapshot==stream"], rows)
+md_table(["kolom", "tipe SODA (X-SODA2-Types)", "tipe nilai JSON mentah", "Parquet snapshot", "Parquet inkremental", "snapshot==inkremental"], rows)
 md.append("Catatan: endpoint JSON mengirim semua angka sebagai *string* dan `georeference` sebagai objek GeoJSON; "
           "poller memakai endpoint CSV + skema Arrow yang sama dengan snapshot sehingga tipenya identik.\n")
 
@@ -68,7 +68,7 @@ out["dryrun_by_day"] = [dict(zip(cols, x)) for x in res]
 md += ["## 2. Kolom target `ridership` di baris baru (dry-run, watermark = cutoff - 3 hari)", ""]
 md_table(cols, res)
 
-# 3. Konsistensi stream vs snapshot pada jendela yang sama --------------------------------------
+# 3. Konsistensi inkremental vs snapshot pada jendela yang sama ---------------------------------
 lo, hi = con.sql(f"SELECT min(transit_timestamp), max(transit_timestamp) FROM read_parquet('{stream_glob}', hive_partitioning=false)").fetchone()
 cols_list = ", ".join(soda.COLUMNS)
 a_minus_b, b_minus_a, n_snap = con.execute(
@@ -80,9 +80,9 @@ a_minus_b, b_minus_a, n_snap = con.execute(
     [lo, hi],
 ).fetchone()
 out["stream_vs_snapshot_window"] = {"from": str(lo), "to": str(hi), "stream_minus_snapshot": a_minus_b, "snapshot_minus_stream": b_minus_a, "snapshot_rows_in_window": n_snap}
-md += ["## 3. Stream vs snapshot pada jendela yang sama", "",
-       f"Jendela {lo} s/d {hi}: baris snapshot {n_snap:,}; stream EXCEPT ALL snapshot = **{a_minus_b}**, "
-       f"snapshot EXCEPT ALL stream = **{b_minus_a}** (0/0 berarti identik baris-per-baris).", ""]
+md += ["## 3. Inkremental vs snapshot pada jendela yang sama", "",
+       f"Jendela {lo} s/d {hi}: baris snapshot {n_snap:,}; inkremental EXCEPT ALL snapshot = **{a_minus_b}**, "
+       f"snapshot EXCEPT ALL inkremental = **{b_minus_a}** (0/0 berarti identik baris-per-baris).", ""]
 
 # 4. Timestamp terbaru dan lag -----------------------------------------------------------------
 meta = soda.get(soda.VIEW_META).json()

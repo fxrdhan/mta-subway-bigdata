@@ -3,8 +3,8 @@
 - Retry + exponential backoff (dengan jitter) untuk 429/5xx/timeout/koneksi putus.
 - Token opsional lewat env var SODA_APP_TOKEN (tidak pernah di-hardcode).
 - Satu requests.Session per thread (aman untuk ThreadPoolExecutor).
-- Skema Arrow tunggal yang dipakai oleh snapshot batch dan poller streaming,
-  sehingga tipe kolom Parquet batch == Parquet stream.
+- Skema Arrow tunggal yang dipakai oleh snapshot batch dan pengambilan inkremental,
+  sehingga tipe kolom Parquet snapshot == Parquet inkremental.
 """
 from __future__ import annotations
 

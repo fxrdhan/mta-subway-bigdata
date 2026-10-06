@@ -1,4 +1,8 @@
-"""Poller "streaming" (micro-batch) untuk baris baru MTA Subway Hourly Ridership.
+"""Pengambilan inkremental (micro-batch) baris baru MTA Subway Hourly Ridership.
+
+Dataset ini diperbarui mingguan (batch), jadi skrip ini bukan sumber streaming;
+sumber streaming proyek adalah feed GTFS-RT MTA. Nama folder data/stream/ dan
+state stream_watermark.json dipertahankan dari versi awal.
 
 Satu siklus:
   1. Baca watermark dari file state (awal = cutoff_ts snapshot di data/state/cutoff.json,

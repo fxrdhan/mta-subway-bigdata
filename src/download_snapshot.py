@@ -62,7 +62,7 @@ def load_or_create_cutoff() -> dict:
         "server_count_total_at_cutoff_time": int(row["n"]),
         "determined_at_utc": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
         "rowsUpdatedAt_utc": dt.datetime.fromtimestamp(meta["rowsUpdatedAt"], dt.timezone.utc).isoformat(),
-        "rule": "snapshot = transit_timestamp <= cutoff_ts; streaming = transit_timestamp > watermark (awal = cutoff_ts)",
+        "rule": "snapshot = transit_timestamp <= cutoff_ts; inkremental = transit_timestamp > watermark (awal = cutoff_ts)",
         "timestamp_semantics": "floating_timestamp (tanpa zona); metadata kolom: 'local time' (NYC)",
     }
     write_json(path, c)
