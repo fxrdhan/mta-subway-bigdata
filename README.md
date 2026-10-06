@@ -58,6 +58,14 @@ Analisis pola pergerakan, peramalan (*forecasting*) kepadatan penumpang per jam 
    - Klasifikasi: Identifikasi kondisi jam sibuk (*Peak* vs *Off-Peak*) serta deteksi anomali keterlambatan jalur kereta.
    - *Clustering* (K-Means): Segmentasi 428 stasiun berdasarkan profil fluktuasi komuter (kawasan perkantoran, pemukiman, atau transit wisata).
 
+## Diagram Alir *Data Wrangling*
+
+Diagram alir berikut merangkum tiga tahap *data wrangling* pada notebook: (a) *gathering* (bagian III), (b) *assessing*, dan (c) *cleaning* (bagian IV).
+
+![Diagram alir data wrangling: (a) data gathering, (b) data assessing, (c) data cleaning](docs/diagrams/data_wrangling_flowchart.svg)
+
+Sumber diagram dapat dibuka dan diedit di [Excalidraw](https://excalidraw.com/#json=vkhoVKhEYBX2iMafjqULz,B0VVTglBLE_UX4sAZNldlw) atau dari berkas [`docs/diagrams/data_wrangling_flowchart.excalidraw`](docs/diagrams/data_wrangling_flowchart.excalidraw).
+
 ## III. Data Wrangling – *Gathering Data*
 
 Bagian ini mendokumentasikan tahap pengumpulan data (*gathering*) untuk dataset *MTA Subway Hourly Ridership*. Seluruh prosesnya dijalankan di Google Colab dan dijelaskan langkah demi langkah pada notebook proyek (bagian **III**).
@@ -162,6 +170,7 @@ Pada repositori:
 | [`notebooks/MTA_Subway_Hourly_Ridership.ipynb`](notebooks/MTA_Subway_Hourly_Ridership.ipynb) | Notebook lengkap proyek beserta seluruh output eksekusi di Google Colab |
 | [`notebooks/minggu3_gathering_data.ipynb`](notebooks/minggu3_gathering_data.ipynb) | Salinan kode bagian III versi Minggu 3 (*gathering data*) |
 | [`docs/TugasMinggu3_BIG-DATA_TK47G06_101032330094-101032300131.pdf`](docs/TugasMinggu3_BIG-DATA_TK47G06_101032330094-101032300131.pdf) | Berkas laporan resmi tugas Minggu 3 (tersedia pula format [DOCX](docs/TugasMinggu3_BIG-DATA_TK47G06_101032330094-101032300131.docx)) |
+| [`docs/diagrams/`](docs/diagrams/) | Diagram alir *data wrangling* (sumber Excalidraw dan SVG) |
 | [`src/download_snapshot.py`](src/download_snapshot.py), [`src/soda.py`](src/soda.py) | Skrip pengambilan yang sama untuk dijalankan di komputer lokal |
 | `data/final/` | Lokasi salinan lokal dataset final (tidak di-*commit* karena besar) |
 
