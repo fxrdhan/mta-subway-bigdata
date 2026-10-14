@@ -1,0 +1,125 @@
+@startuml data_gathering_flowchart
+' Data gathering flow of notebooks/MTA_Subway_Hourly_Ridership.ipynb (section III).
+' Partition numbers follow the numbered subsections of section III in the notebook.
+' PNG at 2x scale: java -DPLANTUML_LIMIT_SIZE=8192 -jar plantuml.jar -tpng -Sdpi=192 data_gathering_flowchart.puml
+
+<style>
+activityDiagram {
+  activity {
+    MinimumWidth 300
+  }
+}
+</style>
+
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam defaultFontSize 13
+skinparam defaultTextAlignment center
+skinparam ArrowColor #1E1E1E
+skinparam ActivityBackgroundColor #FFFFFF
+skinparam ActivityBorderColor #1E1E1E
+skinparam ActivityDiamondBackgroundColor #FFFFFF
+skinparam ActivityDiamondBorderColor #1E1E1E
+skinparam ActivityStartColor #1E1E1E
+skinparam ActivityEndColor #1E1E1E
+skinparam PartitionBorderColor #8A8A8A
+skinparam NoteBackgroundColor #F4F4F4
+skinparam NoteBorderColor #8A8A8A
+skinparam NoteTextAlignment left
+
+title Data gathering flow (notebook section III)
+
+start
+
+partition "3. Environment setup" {
+  :Import libraries and set the parameters
+  (CUTOFF_TS, EXPECTED, WORKERS = 6, folders);
+  :Define the API helpers
+  soda_get() and aggregate();
+  note right
+    Every API call goes through soda_get():
+    HTTP 429, 5xx and network errors are
+    retried with exponential backoff
+    (up to 8 times)
+  end note
+}
+
+partition "4. Source verification" {
+  :Read the dataset metadata
+  (/api/views/5wq4-mkjj.json);
+  :Compare raw JSON and CSV responses
+  and choose the CSV endpoint;
+  :Define the target schema
+  (12 typed columns and SORT_KEYS);
+}
+
+partition "5. Snapshot and plan" {
+  :Compare server totals up to CUTOFF_TS
+  with EXPECTED and list revisions (:updated_at);
+  :Count rows per day on the server
+  (download plan and validation reference);
+}
+
+partition "6. Data gathering" {
+  :Test download_day() on the first day;
+  note right
+    Then download_day() runs for every
+    day of the plan on 6 parallel threads;
+    a mismatching download is retried after 5 s
+  end note
+  while (Days left in the plan?) is (yes)
+    if (Daily file exists with\nthe server row count?) then (no)
+      repeat
+        :Download the day from the CSV endpoint
+        (pages of 500,000 rows ordered by :id);
+        :Parse the CSV with the target schema;
+      repeat while (Row count differs from the server\nand fewer than 3 attempts?) is (yes) not (no)
+      if (Row count matches\nthe server?) then (yes)
+        :Write the day to a Parquet file (zstd)
+        through a temporary file;
+      else (no: RuntimeError)
+        stop
+      endif
+    else (yes, skip)
+    endif
+  endwhile (no)
+}
+
+partition "7. Data merging" {
+  :Show the concat on the first 3 days (pd.concat);
+  :Merge each month's daily files into one
+  file sorted by SORT_KEYS (DuckDB);
+  if (Monthly rows match the server\nand months do not overlap?) then (yes)
+    :Concatenate the monthly files
+    into one final Parquet file;
+  else (no: AssertionError)
+    stop
+  endif
+}
+
+partition "8. Initial inspection" {
+  :Query the final file as the DuckDB view mta;
+  :Check dimensions, types, nulls, empty strings,
+  categories, statistics and time coverage;
+  :Record initial findings for section IV
+  (no fixes at this stage);
+}
+
+partition "9. Validation" {
+  :Compare daily rows, ridership and transfers
+  with the server (pd.merge on date);
+  :Check duplicate keys and row order
+  (monthly files and final file);
+}
+
+partition "10. Final dataset" {
+  :Summarize the final dataset;
+  if (SAVE_TO_DRIVE?) then (yes)
+    :Copy the final file to Google Drive;
+  else (no)
+  endif
+  :Final dataset (Parquet) for section IV;
+}
+
+stop
+@enduml

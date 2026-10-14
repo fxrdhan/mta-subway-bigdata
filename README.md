@@ -170,7 +170,7 @@ Pada repositori:
 | [`notebooks/MTA_Subway_Hourly_Ridership.ipynb`](notebooks/MTA_Subway_Hourly_Ridership.ipynb) | Notebook lengkap proyek beserta seluruh output eksekusi di Google Colab |
 | [`notebooks/minggu3_gathering_data.ipynb`](notebooks/minggu3_gathering_data.ipynb) | Salinan kode bagian III versi Minggu 3 (*gathering data*) |
 | [`docs/TugasMinggu3_BIG-DATA_TK47G06_101032330094-101032300131.pdf`](docs/TugasMinggu3_BIG-DATA_TK47G06_101032330094-101032300131.pdf) | Berkas laporan resmi tugas Minggu 3 (tersedia pula format [DOCX](docs/TugasMinggu3_BIG-DATA_TK47G06_101032330094-101032300131.docx)) |
-| [`docs/diagrams/`](docs/diagrams/) | Diagram alir *data wrangling* (sumber Excalidraw dan SVG) |
+| [`docs/diagrams/`](docs/diagrams/) | Diagram alir *data wrangling* (sumber Excalidraw dan SVG) dan diagram alir *gathering* pada notebook bagian III (sumber PlantUML dan PNG) |
 | [`src/download_snapshot.py`](src/download_snapshot.py), [`src/soda.py`](src/soda.py) | Skrip pengambilan yang sama untuk dijalankan di komputer lokal |
 | `data/final/` | Lokasi salinan lokal dataset final (tidak di-*commit* karena besar) |
 
