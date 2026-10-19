@@ -1,6 +1,6 @@
 @startuml 01_setup_source_plan
 ' Part 1: subsections 3-5 of notebooks/MTA_Subway_Hourly_Ridership_2025-01_2026-10.ipynb.
-!include _style.iuml
+!include ../_gathering_style.iuml
 
 title Part 1 · Setup, source verification and plan (subsections 3-5)
 

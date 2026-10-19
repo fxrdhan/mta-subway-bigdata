@@ -1,0 +1,34 @@
+@startuml 02_gathering
+' Part 2: subsection 6 of notebooks/MTA_Subway_Hourly_Ridership.ipynb (cutoff 2026-09-16).
+!include ../_gathering_style.iuml
+
+title Part 2 · Data gathering (subsection 6)
+
+start
+partition "6.1-6.2 Download per day" {
+  :Test download_day() on the first day;
+  note right
+    Then download_day() runs for every
+    day of the plan on 6 parallel threads
+  end note
+  while (Days left in the plan?) is (yes)
+    if (Daily file exists with\nthe server row count?) then (no)
+      repeat
+        :Download the day from the CSV endpoint
+        (pages of 500,000 rows ordered by :id);
+        :Parse the CSV with the target schema;
+      repeat while (Row count differs from the server\nand fewer than 3 attempts?) is (yes, wait 5 s) not (no)
+      if (Row count matches\nthe server?) then (yes)
+        :Write the day to a Parquet file (zstd)
+        through a temporary file;
+      else (no: RuntimeError)
+        stop
+      endif
+    else (yes, skip)
+    endif
+  endwhile (no)
+  :Summarize downloaded and skipped days;
+}
+:Daily Parquet files for subsection 7;
+stop
+@enduml

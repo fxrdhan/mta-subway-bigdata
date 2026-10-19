@@ -2,7 +2,7 @@
 ' Section III of notebooks/MTA_Subway_Hourly_Ridership_2025-01_2026-10.ipynb at a glance.
 ' Parts 1-4 detail each step and are shown at the start of the matching subsections.
 ' PNG at 2x scale: java -jar plantuml.jar -tpng -Sdpi=192 *.puml
-!include _style.iuml
+!include ../_gathering_style.iuml
 
 title Data gathering at a glance (notebook section III)
 

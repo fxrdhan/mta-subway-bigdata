@@ -1,6 +1,6 @@
 @startuml 02_gathering
 ' Part 2: subsection 6 of notebooks/MTA_Subway_Hourly_Ridership_2025-01_2026-10.ipynb.
-!include _style.iuml
+!include ../_gathering_style.iuml
 
 title Part 2 · Data gathering with the Google Drive cache (subsection 6)
 

@@ -1,0 +1,33 @@
+@startuml 03_merging
+' Part 3: subsection 7 of notebooks/MTA_Subway_Hourly_Ridership.ipynb (cutoff 2026-09-16).
+!include ../_gathering_style.iuml
+
+title Part 3 · Data merging (subsection 7)
+
+start
+partition "7.1 Concat example" {
+  :Concatenate the first 3 days (pd.concat)
+  and check the row count;
+}
+partition "7.2 Daily to monthly" {
+  while (Months left?) is (yes)
+    if (Monthly file exists with\nthe server row count?) then (no)
+      :Read the month's daily files,
+      sort by SORT_KEYS (DuckDB) and write
+      one Parquet file through a temporary file;
+    else (yes, keep)
+    endif
+  endwhile (no)
+  if (Every month matches the server\nand months do not overlap?) then (yes)
+  else (no: AssertionError)
+    stop
+  endif
+}
+partition "7.3 Monthly to final" {
+  :Concatenate the monthly files in order
+  into one final Parquet file
+  (already sorted, no re-sorting);
+}
+:Final Parquet file for subsection 8;
+stop
+@enduml

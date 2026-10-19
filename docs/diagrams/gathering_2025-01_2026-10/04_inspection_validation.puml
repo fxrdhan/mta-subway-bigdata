@@ -1,6 +1,6 @@
 @startuml 04_inspection_validation
 ' Part 4: subsections 8-10 of notebooks/MTA_Subway_Hourly_Ridership_2025-01_2026-10.ipynb.
-!include _style.iuml
+!include ../_gathering_style.iuml
 
 title Part 4 · Inspection, validation and final dataset (subsections 8-10)
 

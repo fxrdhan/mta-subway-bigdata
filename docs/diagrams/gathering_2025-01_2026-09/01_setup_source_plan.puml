@@ -1,0 +1,40 @@
+@startuml 01_setup_source_plan
+' Part 1: subsections 3-5 of notebooks/MTA_Subway_Hourly_Ridership.ipynb (cutoff 2026-09-16).
+!include ../_gathering_style.iuml
+
+title Part 1 · Setup, source verification and plan (subsections 3-5)
+
+start
+partition "3. Environment setup" {
+  :Import libraries and set the parameters
+  (CUTOFF_TS, EXPECTED, WORKERS = 6, folders);
+  :Define the API helpers
+  soda_get() and aggregate();
+  note right
+    soda_get() retries HTTP 429, 5xx and
+    network errors with exponential backoff
+    (up to 8 times); other 4xx errors stop
+  end note
+}
+partition "4. Source verification" {
+  :Read the dataset metadata
+  (/api/views/5wq4-mkjj.json);
+  :Compare raw JSON and CSV responses
+  and choose the CSV endpoint;
+  :Define the target schema
+  (12 typed columns and SORT_KEYS);
+}
+partition "5. Snapshot and plan" {
+  :Compare server totals up to CUTOFF_TS
+  with EXPECTED and list revisions (:updated_at);
+  note right
+    Reports YES or NO;
+    the notebook continues either way
+  end note
+  :Count rows per day on the server;
+  :Summarize and chart the plan per month;
+}
+:Plan per day (row counts)
+for the download and validation;
+stop
+@enduml
