@@ -15,12 +15,14 @@ partition "Restore the cache" {
 }
 partition "6.1-6.2 Download per day" {
   :Test download_day() on the first day;
+  :Count days by status: missing, rows or totals
+  differ, revised on the server, up to date;
   note right
     Then download_day() runs for every
     day of the plan on 6 parallel threads
   end note
   while (Days left in the plan?) is (yes)
-    if (Daily file has the server's row count\nand ridership/transfers totals?) then (no)
+    if (Daily file has the server's row count and totals,\nand was saved after the day's last :updated_at?) then (no)
       repeat
         :Download the day from the CSV endpoint
         (pages of 500,000 rows ordered by :id);
@@ -28,6 +30,7 @@ partition "6.1-6.2 Download per day" {
       repeat while (Row count differs from the server\nand fewer than 3 attempts?) is (yes, wait 5 s) not (no)
       if (Row count matches\nthe server?) then (yes)
         :Write the day to a Parquet file (zstd)
+        stamped with the day's :updated_at,
         through a temporary file;
       else (no: RuntimeError)
         stop

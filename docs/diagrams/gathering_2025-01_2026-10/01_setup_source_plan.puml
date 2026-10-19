@@ -32,11 +32,11 @@ partition "5. Snapshot and plan" {
     Reports YES or NO;
     the notebook continues either way
   end note
-  :Count rows, ridership and transfers
-  per day on the server;
+  :Count rows, ridership, transfers and
+  the latest :updated_at per day on the server;
   :Summarize and chart the plan per month;
 }
-:Plan per day (rows and totals)
+:Plan per day (rows, totals, last revision)
 for the download and validation;
 stop
 @enduml
