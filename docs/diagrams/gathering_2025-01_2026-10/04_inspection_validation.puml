@@ -1,0 +1,33 @@
+@startuml 04_inspection_validation
+' Part 4: subsections 8-10 of notebooks/MTA_Subway_Hourly_Ridership_2025-01_2026-10.ipynb.
+!include _style.iuml
+
+title Part 4 · Inspection, validation and final dataset (subsections 8-10)
+
+start
+partition "8. Initial inspection" {
+  :Open the final file as the DuckDB view mta;
+  :Check dimensions, types, sample rows,
+  nulls and empty strings;
+  :Profile categories, numeric statistics
+  and time coverage (missing hours);
+  :Record initial findings for section IV
+  (no fixes at this stage);
+}
+partition "9. Validation" {
+  :Compare daily rows, ridership and transfers
+  with the server (pd.merge on date);
+  :Check duplicate keys and row order in the
+  monthly files, and that time never goes
+  backward in the final file;
+}
+partition "10. Final dataset" {
+  :Summarize the final dataset;
+  if (SAVE_TO_DRIVE and\nrunning in Colab?) then (yes)
+    :Copy the final file to Google Drive;
+  else (no)
+  endif
+}
+:Final dataset (Parquet) for section IV;
+stop
+@enduml

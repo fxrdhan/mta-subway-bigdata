@@ -1,0 +1,25 @@
+' Shared style for the section III diagrams of notebooks/MTA_Subway_Hourly_Ridership_2025-01_2026-10.ipynb
+' (same look as ../data_gathering_flowchart.puml).
+<style>
+activityDiagram {
+  activity {
+    MinimumWidth 300
+  }
+}
+</style>
+
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam defaultFontSize 13
+skinparam defaultTextAlignment center
+skinparam ArrowColor #1E1E1E
+skinparam ActivityBackgroundColor #FFFFFF
+skinparam ActivityBorderColor #1E1E1E
+skinparam ActivityDiamondBackgroundColor #FFFFFF
+skinparam ActivityDiamondBorderColor #1E1E1E
+skinparam ActivityStartColor #1E1E1E
+skinparam ActivityEndColor #1E1E1E
+skinparam PartitionBorderColor #8A8A8A
+skinparam NoteBackgroundColor #F4F4F4
+skinparam NoteBorderColor #8A8A8A
+skinparam NoteTextAlignment left

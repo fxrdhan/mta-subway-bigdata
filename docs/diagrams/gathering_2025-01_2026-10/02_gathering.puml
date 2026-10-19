@@ -1,0 +1,50 @@
+@startuml 02_gathering
+' Part 2: subsection 6 of notebooks/MTA_Subway_Hourly_Ridership_2025-01_2026-10.ipynb.
+!include _style.iuml
+
+title Part 2 · Data gathering with the Google Drive cache (subsection 6)
+
+start
+partition "Restore the cache" {
+  :Extract daily files from 01_daily.tar on Drive
+  that are not in /content yet;
+  note right
+    Only when USE_DRIVE_CACHE is on in Colab
+    and the archive exists (Drive is mounted first)
+  end note
+}
+partition "6.1-6.2 Download per day" {
+  :Test download_day() on the first day;
+  note right
+    Then download_day() runs for every
+    day of the plan on 6 parallel threads
+  end note
+  while (Days left in the plan?) is (yes)
+    if (Daily file has the server's row count\nand ridership/transfers totals?) then (no)
+      repeat
+        :Download the day from the CSV endpoint
+        (pages of 500,000 rows ordered by :id);
+        :Parse the CSV with the target schema;
+      repeat while (Row count differs from the server\nand fewer than 3 attempts?) is (yes, wait 5 s) not (no)
+      if (Row count matches\nthe server?) then (yes)
+        :Write the day to a Parquet file (zstd)
+        through a temporary file;
+      else (no: RuntimeError)
+        stop
+      endif
+    else (yes, skip)
+    endif
+  endwhile (no)
+  :Summarize downloaded and skipped days;
+}
+partition "Save the cache" {
+  :Pack all daily files into one .tar and copy it
+  to Drive as .partial, then rename to 01_daily.tar;
+  note right
+    Only when the cache is on and a day was
+    downloaded or no archive exists yet
+  end note
+}
+:Daily Parquet files for subsection 7;
+stop
+@enduml
