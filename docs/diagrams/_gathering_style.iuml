@@ -1,5 +1,5 @@
 ' Shared style for the split section III diagrams of both data wrangling notebooks
-' (same look as data_gathering_flowchart.puml).
+' (black-on-white PlantUML activity style, rendered at 2x with -Sdpi=192).
 <style>
 activityDiagram {
   activity {

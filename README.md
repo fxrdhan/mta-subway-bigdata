@@ -73,7 +73,7 @@ Bagian ini mendokumentasikan tahap pengumpulan data (*gathering*) untuk dataset 
 - Notebook Google Colab: https://colab.research.google.com/drive/1GU64Yx-8Bq7PgxiG-lg5t9dnfb1lKIH5
 - Notebook lengkap dengan output eksekusi: [`notebooks/MTA_Subway_Hourly_Ridership.ipynb`](notebooks/MTA_Subway_Hourly_Ridership.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/fxrdhan/mta-subway-bigdata/blob/main/notebooks/MTA_Subway_Hourly_Ridership.ipynb)
 - Salinan kode notebook di repositori: [`notebooks/minggu3_gathering_data.ipynb`](notebooks/minggu3_gathering_data.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/fxrdhan/mta-subway-bigdata/blob/main/notebooks/minggu3_gathering_data.ipynb)
-- Notebook versi data terbaru (*cutoff* 2026-10-08 23:00, 46.363.790 baris): [`notebooks/MTA_Subway_Hourly_Ridership_2025-01_2026-10.ipynb`](notebooks/MTA_Subway_Hourly_Ridership_2025-01_2026-10.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/fxrdhan/mta-subway-bigdata/blob/main/notebooks/MTA_Subway_Hourly_Ridership_2025-01_2026-10.ipynb). Isinya sama dengan notebook lengkap, ditambah opsi `USE_DRIVE_CACHE` yang menyimpan file harian di Google Drive agar sesi Colab berikutnya tidak perlu mengunduh ulang seluruh hari. Angka pada README ini dan laporan tetap mengikuti *cutoff* 2026-09-16 23:00.
+- Notebook versi data terbaru (*cutoff* 2026-10-08 23:00, 46.363.790 baris): [`notebooks/MTA_Subway_Hourly_Ridership_2025-01_2026-10.ipynb`](notebooks/MTA_Subway_Hourly_Ridership_2025-01_2026-10.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/fxrdhan/mta-subway-bigdata/blob/main/notebooks/MTA_Subway_Hourly_Ridership_2025-01_2026-10.ipynb). Isinya sama dengan notebook lengkap, ditambah opsi `USE_DRIVE_CACHE` yang menyimpan file harian di Google Drive agar sesi Colab berikutnya tidak perlu mengunduh ulang seluruh hari, serta pengecekan revisi per hari (jumlah baris, total, dan `:updated_at` server) sehingga hanya hari yang berubah yang diunduh ulang. Angka bagian III dan IV README ini dan laporan tetap mengikuti *cutoff* 2026-09-16 23:00.
 - Notebook EDA (data *cutoff* 2026-10-08): [`notebooks/MTA_Subway_Hourly_Ridership_EDA_2025-01_2026-10.ipynb`](notebooks/MTA_Subway_Hourly_Ridership_EDA_2025-01_2026-10.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/fxrdhan/mta-subway-bigdata/blob/main/notebooks/MTA_Subway_Hourly_Ridership_EDA_2025-01_2026-10.ipynb). Membaca dataset bersih dari Google Drive tanpa mengunduh ulang dari API, lalu menganalisis pola jam dan hari, tren bulanan, OMNY dan MetroCard, stasiun, profil jam per stasiun, dan distribusi target regresi.
 - Notebook pemodelan (data *cutoff* 2026-10-08): [`notebooks/MTA_Subway_Hourly_Ridership_Modeling_2025-01_2026-10.ipynb`](notebooks/MTA_Subway_Hourly_Ridership_Modeling_2025-01_2026-10.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/fxrdhan/mta-subway-bigdata/blob/main/notebooks/MTA_Subway_Hourly_Ridership_Modeling_2025-01_2026-10.ipynb). Regresi penumpang per stasiun per jam (dua skenario ketersediaan data), klasifikasi jam padat, dan K-Means profil stasiun, semuanya dari dataset bersih yang sama dengan notebook EDA.
 - Laporan tugas Minggu 3: [`docs/TugasMinggu3_BIG-DATA_TK47G06_101032330094-101032300131.pdf`](docs/TugasMinggu3_BIG-DATA_TK47G06_101032330094-101032300131.pdf) ([DOCX](docs/TugasMinggu3_BIG-DATA_TK47G06_101032330094-101032300131.docx))
@@ -172,8 +172,11 @@ Pada repositori:
 |---|---|
 | [`notebooks/MTA_Subway_Hourly_Ridership.ipynb`](notebooks/MTA_Subway_Hourly_Ridership.ipynb) | Notebook lengkap proyek beserta seluruh output eksekusi di Google Colab |
 | [`notebooks/minggu3_gathering_data.ipynb`](notebooks/minggu3_gathering_data.ipynb) | Salinan kode bagian III versi Minggu 3 (*gathering data*) |
+| [`notebooks/MTA_Subway_Hourly_Ridership_2025-01_2026-10.ipynb`](notebooks/MTA_Subway_Hourly_Ridership_2025-01_2026-10.ipynb) | Bagian III dan IV dengan data *cutoff* 2026-10-08 (46.363.790 baris), cache file harian di Google Drive, dan pengecekan revisi per hari |
+| [`notebooks/MTA_Subway_Hourly_Ridership_EDA_2025-01_2026-10.ipynb`](notebooks/MTA_Subway_Hourly_Ridership_EDA_2025-01_2026-10.ipynb) | *Exploratory data analysis* (bagian V) |
+| [`notebooks/MTA_Subway_Hourly_Ridership_Modeling_2025-01_2026-10.ipynb`](notebooks/MTA_Subway_Hourly_Ridership_Modeling_2025-01_2026-10.ipynb) | Pemodelan: regresi, klasifikasi, dan K-Means (bagian VI) |
 | [`docs/TugasMinggu3_BIG-DATA_TK47G06_101032330094-101032300131.pdf`](docs/TugasMinggu3_BIG-DATA_TK47G06_101032330094-101032300131.pdf) | Berkas laporan resmi tugas Minggu 3 (tersedia pula format [DOCX](docs/TugasMinggu3_BIG-DATA_TK47G06_101032330094-101032300131.docx)) |
-| [`docs/diagrams/`](docs/diagrams/) | Diagram alir *data wrangling* (sumber Excalidraw dan SVG) dan diagram alir *gathering* pada notebook bagian III (sumber PlantUML dan PNG) |
+| [`docs/diagrams/`](docs/diagrams/) | Diagram alir *data wrangling* (sumber Excalidraw dan SVG), serta diagram alir *gathering* bagian III per bagian (ringkasan dan empat diagram rinci, sumber PlantUML dan PNG): [`gathering_2025-01_2026-09/`](docs/diagrams/gathering_2025-01_2026-09/) untuk notebook utama dan [`gathering_2025-01_2026-10/`](docs/diagrams/gathering_2025-01_2026-10/) untuk notebook *cutoff* 2026-10-08 |
 | [`src/download_snapshot.py`](src/download_snapshot.py), [`src/soda.py`](src/soda.py) | Skrip pengambilan yang sama untuk dijalankan di komputer lokal |
 | `data/final/` | Lokasi salinan lokal dataset final (tidak di-*commit* karena besar) |
 
@@ -411,3 +414,33 @@ Waktu pada file bersih tidak pernah mundur (0 baris), sama dengan file final.
 | Tipe yang berubah | `ridership` dan `transfers` menjadi `INTEGER`; `is_dst_transition` bertipe `BOOLEAN` |
 | Baris bertanda `is_dst_transition` | 3.444 |
 | Pelanggaran aturan `error` | 0 |
+
+## V. *Exploratory Data Analysis* (EDA)
+
+Bagian V dan VI memakai dataset bersih versi *cutoff* 2026-10-08 (46.363.790 baris, 1 Januari 2025 s.d. 8 Oktober 2026) dari notebook [`MTA_Subway_Hourly_Ridership_2025-01_2026-10.ipynb`](notebooks/MTA_Subway_Hourly_Ridership_2025-01_2026-10.ipynb), sehingga angkanya berbeda dengan bagian III dan IV (*cutoff* 2026-09-16). Rincian, grafik, dan seluruh angka ada pada notebook [`MTA_Subway_Hourly_Ridership_EDA_2025-01_2026-10.ipynb`](notebooks/MTA_Subway_Hourly_Ridership_EDA_2025-01_2026-10.ipynb).
+
+| Aspek | Temuan |
+|---|---|
+| Volume | Rata-rata 3,60 juta penumpang per hari: 4,05 juta pada hari kerja dan 2,46 juta pada akhir pekan |
+| Pola jam | Hari kerja memiliki puncak pukul 08.00 (9,2% penumpang harian) dan 17.00 (10,0%); empat jam tersibuk menampung 34,8% penumpang. Akhir pekan hanya memiliki satu puncak landai sekitar pukul 16.00 |
+| Hari anomali | Enam dari delapan hari kerja tersepi adalah hari libur nasional Amerika Serikat. Penurunan paling tajam terjadi pada 25-26 Januari dan 22-23 Februari 2026, yang penyebabnya tidak tercatat di dataset |
+| Tren | Setiap bulan Januari-September 2026 lebih ramai daripada bulan yang sama pada 2025 (+0,1% s.d. +7,1%); rata-rata harian terendah pada Januari dan Agustus |
+| Metode pembayaran | Porsi OMNY naik dari 66,6% (Januari 2025) menjadi 99,7% (Oktober 2026); transisi praktis selesai pada awal 2026 |
+| Stasiun | Manhattan menampung 55,9% penumpang dan 50 kompleks teratas 45,3%. Times Sq-42 St rata-rata 133.123 penumpang per hari |
+| Profil stasiun | 297 kompleks lebih ramai pada pagi hari (pola permukiman) dan 131 pada sore hari (pola perkantoran) |
+| Target regresi | Penumpang per stasiun per jam sangat condong ke kanan (*skewness* 7,66) dan mendekati simetris setelah $\log(1 + \text{ridership})$ (-0,27); 1,98% kombinasi stasiun-jam tidak tercatat dan diperlakukan sebagai nol |
+
+## VI. Pemodelan (*Machine Learning*)
+
+Notebook [`MTA_Subway_Hourly_Ridership_Modeling_2025-01_2026-10.ipynb`](notebooks/MTA_Subway_Hourly_Ridership_Modeling_2025-01_2026-10.ipynb) membangun grid 428 kompleks stasiun × 15.501 jam. Model dilatih pada data sampai 30 Juni 2026 dan diuji pada 1 Juli s.d. 8 Oktober 2026 (100 hari).
+
+Regresi dibuat dalam dua skenario karena data *ridership* baru dirilis MTA sekitar 6,5 sampai 12 hari setelah jam terjadi: skenario A memakai penumpang mulai 1 jam sebelumnya (seolah data *real-time* tersedia), sedangkan skenario B memakai data berumur minimal 14 hari (sesuai rilis MTA).
+
+| Model | Hasil pada periode uji |
+|---|---|
+| Regresi, skenario A | WAPE 9,64%, dibanding 14,40% untuk *baseline* terbaik (profil stasiun) |
+| Regresi, skenario B | WAPE 13,25% dibanding 14,40%; RMSE 194,70 lebih buruk daripada *baseline* (155,69) karena puncak sore stasiun terbesar diprediksi terlalu rendah |
+| Klasifikasi jam padat per stasiun | ROC-AUC 0,941 dan F1 0,721, dibanding F1 0,615 untuk aturan jam sibuk sederhana; alarm palsu turun 59% |
+| *Clustering* K-Means (k = 3) | *Commercial core* (112 kompleks), *mixed and transfer hubs* (130), dan *residential* (186) |
+
+Regresi memakai *gradient boosting* dengan *loss* Poisson, yang lebih baik daripada target $\log(1 + \text{ridership})$ pada ketiga metrik di kedua skenario. Skenario A belum dapat dipakai langsung karena portal MTA tidak menyediakan data penumpang *real-time*; hiperparameter belum disetel; dan deteksi anomali keterlambatan kereta menunggu data GTFS-RT dari tahap *streaming*.
