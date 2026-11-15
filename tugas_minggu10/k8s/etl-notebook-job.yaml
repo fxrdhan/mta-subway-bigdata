@@ -1,0 +1,62 @@
+# Runs ETL_Pipeline.ipynb inside the cluster (next to PostgreSQL, Kafka, and MongoDB) with nbconvert and keeps the pod alive
+# for 2 hours afterwards so the executed notebook and transformed_dataset.csv can be copied out.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: etl-notebook
+  namespace: mta-pipeline
+  labels: { app: etl-notebook }
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 14400
+  ttlSecondsAfterFinished: 3600
+  template:
+    metadata:
+      labels: { app: etl-notebook }
+    spec:
+      restartPolicy: Never
+      nodeSelector: { workload: jupyter }
+      tolerations: [{ key: workload, operator: Equal, value: jupyter, effect: NoSchedule }]
+      containers:
+      - name: notebook
+        image: python:3.13-slim
+        command: ["sh", "-c"]
+        args:
+        - >-
+          pip install --no-cache-dir --quiet --disable-pip-version-check --root-user-action=ignore
+          jupyter nbconvert ipykernel duckdb==1.5.6 pyarrow==25.0.1 "psycopg[binary]>=3.2" "requests>=2.34.2"
+          pandas==3.1.1 "pytz>=2025.2" confluent-kafka==2.16.1 "pymongo>=4.15,<5" "nyct-gtfs>=2.0"
+          && cp /nb/ETL_Pipeline.ipynb /work/ && cd /work
+          && jupyter nbconvert --to notebook --execute ETL_Pipeline.ipynb --output ETL_Pipeline_executed.ipynb
+          --ExecutePreprocessor.timeout=-1; echo "nbconvert exit $?" > /work/done; sleep 7200
+        env:
+        - { name: PYTHONUNBUFFERED, value: "1" }
+        - { name: ETL_STAGING, value: /work/staging }
+        - { name: ETL_OUTPUT, value: /work/output }
+        - { name: ETL_WORKERS, value: "6" }
+        - { name: STREAMING_CODE, value: /streaming }
+        - { name: KAFKA_BOOTSTRAP, value: "mta-kafka.mta-pipeline.svc.cluster.local:9092" }
+        - { name: KAFKA_TOPIC, value: mta-gtfs-stream }
+        - name: MONGO_URI
+          valueFrom: { secretKeyRef: { name: mta-mongo, key: uri } }
+        - { name: PGHOST, value: "postgres.db.svc.cluster.local" }
+        - { name: PGPORT, value: "5432" }
+        - { name: PGDATABASE, value: mta }
+        - name: PGUSER
+          valueFrom: { secretKeyRef: { name: mta-postgres, key: username } }
+        - name: PGPASSWORD
+          valueFrom: { secretKeyRef: { name: mta-postgres, key: password } }
+        resources:
+          requests: { cpu: "2", memory: 3Gi }
+          limits: { cpu: "3", memory: 4Gi }
+        volumeMounts:
+        - { name: nb, mountPath: /nb, readOnly: true }
+        - { name: streaming, mountPath: /streaming, readOnly: true }
+        - { name: work, mountPath: /work }
+      volumes:
+      - name: nb
+        configMap: { name: etl-notebook }
+      - name: streaming
+        configMap: { name: streaming-code }
+      - name: work
+        emptyDir: { sizeLimit: 12Gi }

@@ -1,0 +1,36 @@
+@startuml 02_elt
+' ELT design for the batch ridership data: load raw data into the lake, transform inside it.
+' PNG at 2x scale: plantuml -tpng -Sdpi=192 02_elt.puml ; SVG: plantuml -tsvg 02_elt.puml
+!include _pipeline_style.iuml
+skinparam ranksep 34
+skinparam nodesep 60
+
+rectangle "$cardfa('subway', '1 · Source', 'SODA API 5wq4-mkjj · CSV', 'MTA Subway Hourly Ridership;\nupdated weekly, revises ~4 months')" as source
+component "$card('kubernetes', '2 · Extract and Load', 'Kubernetes CronJob · daily 01:00 UTC', 'changed days copied as is, stamped with\nsource_updated_at and fetched_at')" as el
+
+package "<$minio{scale=0.8}> Data lake · MinIO" as lake {
+  storage "$card('minio', '3 · Raw zone (bronze)', 'one Parquet file per day, as delivered', 'bronze/ridership/YYYY-MM/YYYY-MM-DD.parquet')" as bronze
+  component "$card('duckdb', '4 · Transform: clean', 'DuckDB SQL over Parquet', 'validate the 12 rules, repair, flag DST hours\n(changed months only)')" as clean
+  storage "$card('minio', 'Silver', 'clean detail rows, sorted by the row key', 'silver/ridership/year=YYYY/month=MM/part-0.parquet')" as silver
+  component "$card('duckdb', '4 · Transform: model', 'DuckDB SQL', 'aggregate per hour, day × station, fare class,\nstation hour profile, quality per month')" as model
+  storage "$card('minio', 'Gold', 'analytics-ready marts', 'gold/mart_name/part-0.parquet')" as gold
+}
+
+database "$card('postgresql', '5 · Serving · PostgreSQL', 'analytics-ready tables', 'gold marts copied for fast dashboard queries')" as serving
+rectangle "$card('grafana', 'Grafana', 'pipeline monitoring and alerts', 'team')" as grafana
+rectangle "$card('streamlit', 'Streamlit app', 'dashboard and ML prediction', 'lecturer and team,\nlogin via Cloudflare Access')" as app
+rectangle "$card('jupyter', 'ML notebooks', 'training and evaluation', 'read silver directly')" as ml
+rectangle "$cardfa('redo', 'Reprocess and audit', 'rerun from bronze', 'rebuild silver and gold\nwhen a rule changes')" as replay
+
+source -right-> el
+el --> bronze
+bronze --> clean
+clean --> silver
+silver --> model
+model --> gold
+gold --> serving
+replay <.left. bronze
+ml <-left- silver
+serving -right-> grafana
+serving -left-> app
+@enduml

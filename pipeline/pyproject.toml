@@ -1,0 +1,27 @@
+[project]
+name = "mta-pipeline"
+version = "0.1.0"
+description = "Batch ELT for MTA Subway Hourly Ridership: SODA API -> MinIO (Parquet) -> PostgreSQL"
+requires-python = ">=3.13"
+dependencies = [
+    "duckdb==1.5.6",
+    "psycopg[binary]>=3.2",
+    "pyarrow==25.0.1",
+    "pytz>=2025.2",  # DuckDB needs it to return TIMESTAMPTZ values to Python
+    "requests>=2.34.2",
+]
+
+[project.optional-dependencies]
+# The training job and the Streamlit app must unpickle the same model, so both pin the same versions.
+ml = ["scikit-learn==1.9.1", "pandas==3.1.1", "numpy==2.5.4", "joblib==1.6.0", "boto3==1.44.3"]
+app = ["streamlit==1.67.0", "plotly==7.1.0"]
+
+[project.scripts]
+mta-pipeline = "mta_pipeline.__main__:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mta_pipeline"]

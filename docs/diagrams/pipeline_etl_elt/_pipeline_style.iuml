@@ -1,0 +1,66 @@
+' Shared style for the pipeline ETL/ELT architecture diagrams (black on white, like ../_gathering_style.iuml).
+' Logos come from _icons.iuml; generic symbols come from the PlantUML stdlib (Font Awesome 5).
+' PNG at 2x scale: plantuml -tpng -Sdpi=192 0*.puml ; SVG: plantuml -tsvg 0*.puml
+!include _icons.iuml
+!include <tupadr3/common>
+!include <tupadr3/font-awesome-5/subway>
+!include <tupadr3/font-awesome-5/users>
+!include <tupadr3/font-awesome-5/redo>
+!include <tupadr3/font-awesome-5/rss>
+!include <tupadr3/font-awesome-5/calendar_alt>
+!include <tupadr3/font-awesome-5/layer_group>
+
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam defaultFontName Helvetica
+skinparam defaultFontSize 10
+skinparam defaultTextAlignment left
+skinparam roundCorner 10
+skinparam linetype ortho
+skinparam ArrowColor #1E1E1E
+skinparam ArrowFontSize 10
+skinparam ArrowFontColor #4A4A4A
+skinparam rectangle {
+  BackgroundColor #FFFFFF
+  BorderColor #1E1E1E
+}
+skinparam component {
+  BackgroundColor #FFFFFF
+  BorderColor #1E1E1E
+}
+skinparam database {
+  BackgroundColor #F4F4F4
+  BorderColor #1E1E1E
+}
+skinparam queue {
+  BackgroundColor #FFFFFF
+  BorderColor #1E1E1E
+}
+skinparam storage {
+  BackgroundColor #F4F4F4
+  BorderColor #1E1E1E
+}
+skinparam frame {
+  FontSize 11
+  BackgroundColor #FFFFFF
+  BorderColor #8A8A8A
+  FontStyle bold
+}
+skinparam package {
+  FontSize 11
+  BackgroundColor #FFFFFF
+  BorderColor #8A8A8A
+  BorderStyle dashed
+  FontStyle bold
+}
+hide stereotype
+
+' Card label: logo and bold name on the first line, [technology] on the second, detail lines below
+' (detail lines use the 10 pt default size, so plain \n line breaks keep the same size).
+!function $card($icon, $name, $tech, $desc)
+!return "<$" + $icon + "{scale=1.1}>  <size:12><b>" + $name + "</b></size>\n<color:#555555>[" + $tech + "]</color>\n" + $desc
+!endfunction
+' Same card with a Font Awesome symbol, whose sprites are drawn at twice the logo size.
+!function $cardfa($icon, $name, $tech, $desc)
+!return "<$" + $icon + "{scale=0.55}>  <size:12><b>" + $name + "</b></size>\n<color:#555555>[" + $tech + "]</color>\n" + $desc
+!endfunction

@@ -1,0 +1,33 @@
+@startuml 01_etl
+' ETL design for the batch ridership data: transform in a staging area, then load only clean data.
+' PNG at 2x scale: plantuml -tpng -Sdpi=192 01_etl.puml ; SVG: plantuml -tsvg 01_etl.puml
+!include _pipeline_style.iuml
+skinparam ranksep 40
+skinparam nodesep 50
+
+rectangle "$cardfa('subway', '1 · Source: MTA Subway Hourly Ridership', 'SODA API 5wq4-mkjj · CSV endpoint', 'updated weekly; each update revises ~4 months')" as source
+
+component "$card('kubernetes', '2 · Extract', 'Kubernetes CronJob · Python · daily 01:00 UTC', 'incremental: only days whose server fingerprint changed\n(row count, ridership and transfers totals, max :updated_at)')" as extract
+
+frame "Staging area" as staging {
+  component "$card('duckdb', '3 · Transform', 'Python + DuckDB · outside the warehouse', 'validate the 12 quality rules, repair invalid values, flag DST hours;\naggregate per hour, day × station, fare class, station hour profile')" as transform
+}
+
+component "$card('python', '4 · Load', 'Python · psycopg', 'upsert per month: delete the month and insert it again\nin one transaction, so a rerun is safe')" as load
+
+database "$card('postgresql', 'Data warehouse · PostgreSQL', 'clean data only, raw rows are not kept', 'fact_ridership_hourly · fact_ridership_daily_station\nfact_ridership_daily_fare_class · dim_station · dim_date')" as dw
+
+rectangle "$card('streamlit', '5 · Output: Streamlit app', 'dashboard and ML prediction', 'lecturer and team,\nlogin via Cloudflare Access')" as app
+rectangle "$card('grafana', '5 · Output: Grafana', 'pipeline monitoring and alerts', 'team')" as grafana
+rectangle "$card('jupyter', '5 · Output: ML notebooks', 'training and evaluation', 'data scientists')" as ml
+
+source --> extract
+extract --> transform
+transform --> load
+load --> dw
+dw --> app
+dw --> grafana
+dw --> ml
+app -[hidden]right- grafana
+grafana -[hidden]right- ml
+@enduml
