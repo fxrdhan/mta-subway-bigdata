@@ -68,14 +68,14 @@ if not STREAM_ONLY:
     B["first_day_id"], B["last_day_id"] = day_id(first), day_id(last)
     m = re.search(r"perlu ekstraksi (\d+) hari pada (\d+) bulan", text("months = plan_months(server, stored)"))
     B["days"], B["months_loaded"] = int(m.group(1)), int(m.group(2))
-    t = text("extracted_rows = extract(days_to_extract)")
+    t = text("extracted_rows = extract(days_to_extract, server)")
     B["rows"] = intc(re.search(r"Data berhasil diekstraksi: ([\d,]+) baris", t).group(1))
     B["extract_min"] = float(re.search(r"Waktu ekstraksi: ([\d.]+) menit", t).group(1))
     m = re.search(r"ukuran berkas staging: (\d+) MB", t)
     B["staging_mb"] = int(m.group(1)) if m else 0
-    t = text("n_rows, n_cols =")
+    t = text("n_rows = duck_value")
     B["cols"] = int(re.search(r"jumlah kolom: (\d+)", t).group(1))
-    t = text("dup_rows, dup_keys = duplicates")
+    t = text("dup_keys = count_duplicates(KEY_COLUMNS)")
     m = re.search(r"Baris duplikat persis: ([\d,]+) \| duplikat kunci .*?: ([\d,]+)", t)
     B["dup_rows"], B["dup_keys"] = intc(m.group(1)), intc(m.group(2))
     sb = series(text("summary_before = {"))
@@ -91,7 +91,7 @@ if not STREAM_ONLY:
     comp = frame("comparison = pd.DataFrame")
     B["comparison"] = [[k, str(r["sebelum"]), str(r["sesudah"])] for k, r in comp.iterrows()]
     B["total_transfers_after"] = intc(comp.loc["total transfers", "sesudah"])
-    t = text("loaded = load(months)")
+    t = text("loaded = load(months")
     B["load_s"] = int(re.search(r"Waktu load: (\d+) detik", t).group(1))
     loaded = {k: intc(v) for k, v in series(t).items() if k.startswith(("fact", "dim"))}
     B["loaded_facts"] = sum(v for k, v in loaded.items() if k.startswith("fact"))
@@ -101,7 +101,7 @@ if not STREAM_ONLY:
     B["consistency"] = [[r["tabel"], intc(r["baris hasil transformasi"]), intc(r["baris di PostgreSQL"]),
                          intc(r["total ridership transformasi"]), intc(r["total ridership PostgreSQL"]), str(r["sama"]) == "True"]
                         for _, r in cons.iterrows()]
-    m = re.search(r"\(([\d.]+) MB, ([\d,]+) baris\)", text("COPY (SELECT d.day"))
+    m = re.search(r"\(([\d.]+) MB, ([\d,]+) baris\)", text("csv_path = OUTPUT"))
     B["csv_mb"], B["csv_rows"] = float(m.group(1)), intc(m.group(2))
     second = ast.literal_eval(re.search(r"(\{'run_id'.*\})", text("second = run_etl()"), re.S).group(1))
     if second["bulan"]:
@@ -110,7 +110,7 @@ if not STREAM_ONLY:
     else:
         B["second_text"] = ("Karena *fingerprint* seluruh hari tidak berubah sejak *run* pertama, *run* kedua tidak mengekstraksi "
                             "data apa pun dan selesai tanpa mengubah isi gudang data, sehingga terbukti aman dijalankan ulang.")
-    runs = frame("FROM {SCHEMA}.pipeline_run ORDER BY started_at")
+    runs = frame("run_log = pg_frame")
     B["runs"] = [[str(r["mulai"]), str(r["selesai"]), r["status"], r["tahap"], intc(r["hari"]) if str(r["hari"]) not in ("", "nan") else 0,
                   intc(r["baris"]) if str(r["baris"]) not in ("", "nan") else 0, str(r["bulan"]),
                   str(r["keterangan"])] for _, r in runs.iterrows()]
@@ -119,7 +119,7 @@ if not STREAM_ONLY:
     R["batch"] = B
 
 S = {}
-k = series(text("WINDOW, PRIME = 320, 240"))
+k = series(text("WINDOW = 320"))
 S["kafka_stored"] = intc(k["pesan tersimpan"])
 S["window_range"] = k["jendela pemeriksaan"]
 sm = series(text("summary_stream = pd.Series"))
@@ -137,10 +137,10 @@ S["matched_pct"] = int(re.search(r"ada untuk (\d+)%", comp.loc["keterlambatan"].
 counts = series(text("stream_counts = {"))
 S["pg_minute"], S["pg_hourly"] = intc(counts["etl.gtfs_delay_minute"]), intc(counts["etl.gtfs_delay_hourly"])
 S["mongo_arrivals"], S["mongo_alerts"] = intc(counts["mta.arrivals"]), intc(counts["mta.alerts"])
-t = text("consistency_stream = (both")
+t = text("consistency_stream = (")
 m = re.search(r"berbeda: (\d+) dari (\d+) \| kedatangan ditemukan di MongoDB: (\d+) dari (\d+)", t)
 S["keys_diff"], S["keys_compared"], S["arrivals_found"], S["arrival_ids"] = map(int, m.groups())
-S["full_minutes"] = len(frame("consistency_stream = (both"))
+S["full_minutes"] = len(frame("consistency_stream = ("))
 integ = series(text("integration_stream = pd.Series"))
 S["batches"], S["lag"] = intc(integ["micro-batch tercatat"]), intc(integ["lag Kafka saat ini (pesan)"])
 S["avg_batch_s"], S["latency_s"] = float(integ["rata-rata durasi micro-batch (s)"]), float(integ["latensi median feed → PostgreSQL (s)"])
