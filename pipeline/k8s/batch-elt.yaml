@@ -1,0 +1,69 @@
+# Daily batch ELT (SODA API -> MinIO bronze/silver/gold -> PostgreSQL) as a Kubernetes CronJob.
+# The code comes from the ConfigMap mta-pipeline-code (see deploy.sh); dependencies are installed at start.
+# Backfill or a manual run: kubectl -n mta-pipeline create job --from=cronjob/mta-batch-elt mta-batch-elt-manual
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: mta-batch-elt
+  namespace: mta-pipeline
+  labels: { app: mta-batch-elt }
+spec:
+  schedule: "0 1 * * *"
+  timeZone: "Etc/UTC"
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 3600
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      activeDeadlineSeconds: 10800
+      ttlSecondsAfterFinished: 604800
+      template:
+        metadata:
+          labels: { app: mta-batch-elt }
+        spec:
+          restartPolicy: Never
+          nodeSelector: { workload: jupyter }
+          tolerations: [{ key: workload, operator: Equal, value: jupyter, effect: NoSchedule }]
+          containers:
+          - name: batch-elt
+            image: python:3.13-slim
+            command: ["sh", "-c"]
+            args:
+            - >-
+              pip install --no-cache-dir --quiet --disable-pip-version-check
+              duckdb==1.5.6 pyarrow==25.0.1 "psycopg[binary]>=3.2" "requests>=2.34.2" "pytz>=2025.2"
+              && exec python -m mta_pipeline
+            workingDir: /app
+            env:
+            - { name: PYTHONPATH, value: /app }
+            - { name: PYTHONUNBUFFERED, value: "1" }
+            - { name: LAKE, value: "s3://mta" }
+            - { name: S3_ENDPOINT, value: "minio.s3.svc.cluster.local:9000" }
+            - name: S3_ACCESS_KEY
+              valueFrom: { secretKeyRef: { name: mta-minio, key: access-key } }
+            - name: S3_SECRET_KEY
+              valueFrom: { secretKeyRef: { name: mta-minio, key: secret-key } }
+            - { name: PGHOST, value: "postgres.db.svc.cluster.local" }
+            - { name: PGPORT, value: "5432" }
+            - { name: PGDATABASE, value: mta }
+            - name: PGUSER
+              valueFrom: { secretKeyRef: { name: mta-postgres, key: username } }
+            - name: PGPASSWORD
+              valueFrom: { secretKeyRef: { name: mta-postgres, key: password } }
+            - { name: DUCKDB_MEMORY_LIMIT, value: "1500MB" }
+            - { name: DUCKDB_THREADS, value: "2" }
+            - { name: DUCKDB_TEMP, value: /scratch/duckdb }
+            - { name: DOWNLOAD_WORKERS, value: "4" }
+            resources:
+              requests: { cpu: "1", memory: 2Gi }
+              limits: { cpu: "2", memory: 2560Mi }
+            volumeMounts:
+            - { name: code, mountPath: /app/mta_pipeline, readOnly: true }
+            - { name: scratch, mountPath: /scratch }
+          volumes:
+          - name: code
+            configMap: { name: mta-pipeline-code }
+          - name: scratch
+            emptyDir: { sizeLimit: 4Gi }
