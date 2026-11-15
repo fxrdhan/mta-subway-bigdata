@@ -1,0 +1,26 @@
+# Helper pod for term_shots.py: psql against the mta database with credentials from the Secret mta-postgres.
+# kubectl apply -f build/shots/etl-psql.yaml  ...  kubectl -n mta-pipeline delete pod etl-psql
+apiVersion: v1
+kind: Pod
+metadata:
+  name: etl-psql
+  namespace: mta-pipeline
+  labels: { app: etl-psql }
+spec:
+  restartPolicy: Never
+  activeDeadlineSeconds: 7200
+  containers:
+  - name: psql
+    image: postgres:16-alpine
+    command: ["sleep", "7200"]
+    env:
+    - { name: PGHOST, value: "postgres.db.svc.cluster.local" }
+    - { name: PGPORT, value: "5432" }
+    - { name: PGDATABASE, value: mta }
+    - name: PGUSER
+      valueFrom: { secretKeyRef: { name: mta-postgres, key: username } }
+    - name: PGPASSWORD
+      valueFrom: { secretKeyRef: { name: mta-postgres, key: password } }
+    resources:
+      requests: { cpu: 50m, memory: 32Mi }
+      limits: { cpu: 500m, memory: 128Mi }

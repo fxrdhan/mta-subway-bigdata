@@ -1,1 +1,6 @@
 dist/
+build/out/
+build/report/node_modules/
+build/report/render10/
+build/report/toc10_entries.json
+build/report/table10_checks.json
