@@ -1,0 +1,58 @@
+@startuml 03_hybrid
+' Chosen architecture: ELT for the batch ridership data, ETL for the GTFS-RT stream.
+' PNG at 2x scale: plantuml -tpng -Sdpi=192 03_hybrid.puml ; SVG: plantuml -tsvg 03_hybrid.puml
+!include _pipeline_style.iuml
+skinparam ranksep 40
+skinparam nodesep 90
+
+package "Batch ELT · ridership (updated weekly by MTA)" as batch {
+  rectangle "$cardfa('subway', 'MTA SODA API', '5wq4-mkjj · CSV', 'hourly ridership')" as soda
+  component "$card('kubernetes', 'Extract and Load', 'Kubernetes CronJob · daily 01:00 UTC', 'changed days only')" as cron
+  storage "$card('minio', 'MinIO · bronze', 'object storage', 'raw daily Parquet')" as bronze
+  component "$card('duckdb', 'Transform in the lake', 'DuckDB SQL', 'bronze → silver → gold')" as duck
+  storage "$card('minio', 'MinIO · silver and gold', 'object storage', 'clean monthly Parquet, marts')" as silver
+}
+
+package "Streaming ETL · GTFS-RT, every 30 s" as stream {
+  rectangle "$cardfa('rss', 'MTA GTFS-RT feed', 'protobuf · every 30 s', 'trip updates and alerts')" as feed
+  component "$card('python', 'Producer', 'Python · Kubernetes Deployment', 'polls the feed')" as producer
+  queue "$card('kafka', 'Apache Kafka', 'topic mta-gtfs-stream', 'one broker, retention 24 h')" as kafka
+  rectangle "$cardfa('calendar_alt', 'Static GTFS', 'ZIP of CSV', 'planned schedule')" as static
+  component "$card('spark', 'Spark Structured Streaming', 'local mode', 'decode, join schedule, delays')" as spark
+}
+
+database "$card('postgresql', 'PostgreSQL', 'serving tables', 'ridership marts, delays per minute\nand per hour, pipeline_run')" as pg
+storage "$card('minio', 'MinIO · raw/gtfs-rt', 'object storage', 'compressed snapshots\nkept 2 days')" as raw
+database "$card('mongodb', 'MongoDB', 'document store', 'train arrivals and alerts\nTTL 7 days')" as mongo
+
+rectangle "$card('streamlit', 'Streamlit app', 'Plotly dashboard and ML prediction', 'crowding, delays, prediction\nper station, hour, day')" as app
+rectangle "$card('grafana', 'Grafana', 'pipeline monitoring and alerts', 'freshness, quality, storage')" as grafana
+rectangle "$card('cloudflare', 'Cloudflare Tunnel + Access', 'outbound tunnel, no open port', 'email one-time code\nfor listed users only')" as cf
+rectangle "$cardfa('users', 'Lecturer and team', 'web browser', 'outside the lab')" as users
+rectangle "$card('jupyter', 'ML notebooks', 'training and evaluation', 'data scientists')" as ml
+
+soda -[hidden]right- feed
+kafka -[hidden]down- duck
+spark -[hidden]down- silver
+soda --> cron
+cron --> bronze
+bronze --> duck
+duck --> silver
+feed --> producer
+producer --> kafka
+kafka --> spark
+static --> spark
+silver --> ml
+silver --> pg
+spark --> pg
+spark --> raw
+spark --> mongo
+ml -[hidden]right- pg
+pg -[hidden]right- raw
+raw -[hidden]right- mongo
+pg --> app
+pg --> grafana
+app -[hidden]right- grafana
+cf -up-> app
+users -up-> cf
+@enduml
