@@ -1,0 +1,58 @@
+# Streamlit dashboard and prediction app, published through the Cloudflare Tunnel route to this Service
+# and protected by Cloudflare Access. It reads PostgreSQL with the read-only account in the Secret mta-app-db.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mta-app
+  namespace: mta-pipeline
+  labels: { app: mta-app }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: mta-app } }
+  template:
+    metadata:
+      labels: { app: mta-app }
+    spec:
+      containers:
+      - name: streamlit
+        image: python:3.13-slim
+        command: ["sh", "-c"]
+        args:
+        - >-
+          pip install --no-cache-dir --quiet --disable-pip-version-check --root-user-action=ignore
+          streamlit==1.67.0 plotly==7.1.0 "psycopg[binary]>=3.2"
+          scikit-learn==1.9.1 pandas==3.1.1 numpy==2.5.4 joblib==1.6.0
+          && exec streamlit run /app/streamlit_app.py --server.port=8501 --server.address=0.0.0.0
+          --server.headless=true --browser.gatherUsageStats=false
+        ports: [{ containerPort: 8501, name: http }]
+        env:
+        - { name: PGHOST, value: "postgres.db.svc.cluster.local" }
+        - { name: PGPORT, value: "5432" }
+        - { name: PGDATABASE, value: mta }
+        - name: PGUSER
+          valueFrom: { secretKeyRef: { name: mta-app-db, key: username } }
+        - name: PGPASSWORD
+          valueFrom: { secretKeyRef: { name: mta-app-db, key: password } }
+        resources:
+          requests: { cpu: 250m, memory: 512Mi }
+          limits: { cpu: "1", memory: 1Gi }
+        readinessProbe:
+          httpGet: { path: /_stcore/health, port: 8501 }
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          failureThreshold: 30
+        volumeMounts:
+        - { name: code, mountPath: /app, readOnly: true }
+      volumes:
+      - name: code
+        configMap: { name: mta-app-code }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mta-app
+  namespace: mta-pipeline
+  labels: { app: mta-app }
+spec:
+  selector: { app: mta-app }
+  ports: [{ name: http, port: 8501, targetPort: 8501 }]

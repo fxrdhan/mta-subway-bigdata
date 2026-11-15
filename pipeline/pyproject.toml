@@ -11,6 +11,11 @@ dependencies = [
     "requests>=2.34.2",
 ]
 
+[project.optional-dependencies]
+# The training job and the Streamlit app must unpickle the same model, so both pin the same versions.
+ml = ["scikit-learn==1.9.1", "pandas==3.1.1", "numpy==2.5.4", "joblib==1.6.0", "boto3==1.44.3"]
+app = ["streamlit==1.67.0", "plotly==7.1.0"]
+
 [project.scripts]
 mta-pipeline = "mta_pipeline.__main__:main"
 

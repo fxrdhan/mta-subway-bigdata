@@ -1,0 +1,67 @@
+# Weekly model training from silver (Monday 03:00 UTC, after the daily batch run).
+# Manual run: kubectl -n mta-pipeline create job --from=cronjob/mta-train mta-train-manual
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: mta-train
+  namespace: mta-pipeline
+  labels: { app: mta-train }
+spec:
+  schedule: "0 3 * * 1"
+  timeZone: "Etc/UTC"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 2
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      activeDeadlineSeconds: 5400
+      ttlSecondsAfterFinished: 604800
+      template:
+        metadata:
+          labels: { app: mta-train }
+        spec:
+          restartPolicy: Never
+          nodeSelector: { workload: jupyter }
+          tolerations: [{ key: workload, operator: Equal, value: jupyter, effect: NoSchedule }]
+          containers:
+          - name: train
+            image: python:3.13-slim
+            command: ["sh", "-c"]
+            args:
+            - >-
+              pip install --no-cache-dir --quiet --disable-pip-version-check --root-user-action=ignore
+              duckdb==1.5.6 pyarrow==25.0.1 "psycopg[binary]>=3.2" "requests>=2.34.2" "pytz>=2025.2"
+              scikit-learn==1.9.1 pandas==3.1.1 numpy==2.5.4 joblib==1.6.0 boto3==1.44.3
+              && exec python -m mta_pipeline.train --days 365
+            workingDir: /app
+            env:
+            - { name: PYTHONPATH, value: /app }
+            - { name: PYTHONUNBUFFERED, value: "1" }
+            - { name: LAKE, value: "s3://mta" }
+            - { name: S3_ENDPOINT, value: "minio.s3.svc.cluster.local:9000" }
+            - name: S3_ACCESS_KEY
+              valueFrom: { secretKeyRef: { name: mta-minio, key: access-key } }
+            - name: S3_SECRET_KEY
+              valueFrom: { secretKeyRef: { name: mta-minio, key: secret-key } }
+            - { name: PGHOST, value: "postgres.db.svc.cluster.local" }
+            - { name: PGPORT, value: "5432" }
+            - { name: PGDATABASE, value: mta }
+            - name: PGUSER
+              valueFrom: { secretKeyRef: { name: mta-postgres, key: username } }
+            - name: PGPASSWORD
+              valueFrom: { secretKeyRef: { name: mta-postgres, key: password } }
+            - { name: DUCKDB_MEMORY_LIMIT, value: "2GB" }
+            - { name: DUCKDB_THREADS, value: "2" }
+            - { name: DUCKDB_TEMP, value: /scratch/duckdb }
+            resources:
+              requests: { cpu: "2", memory: 4Gi }
+              limits: { cpu: "4", memory: 6Gi }
+            volumeMounts:
+            - { name: code, mountPath: /app/mta_pipeline, readOnly: true }
+            - { name: scratch, mountPath: /scratch }
+          volumes:
+          - name: code
+            configMap: { name: mta-pipeline-code }
+          - name: scratch
+            emptyDir: { sizeLimit: 4Gi }

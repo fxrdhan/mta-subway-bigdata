@@ -92,3 +92,16 @@ CREATE TABLE IF NOT EXISTS quality_month (
     rows      bigint NOT NULL,
     PRIMARY KEY (month, tag)
 );
+
+-- Ridership models trained from silver; the Streamlit app loads the current one.
+-- The same artifact is also stored in MinIO under models/ridership/.
+CREATE TABLE IF NOT EXISTS ml_model (
+    model_id     uuid PRIMARY KEY,
+    name         text NOT NULL,
+    trained_at   timestamptz NOT NULL,
+    data_start   timestamp NOT NULL,
+    data_end     timestamp NOT NULL,
+    metrics      jsonb NOT NULL,
+    artifact     bytea NOT NULL,
+    is_current   boolean NOT NULL DEFAULT false
+);
