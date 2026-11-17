@@ -1,0 +1,35 @@
+@startuml
+!include _alur_style.iuml
+title Jalur streaming: satu micro-batch Spark (setiap 30 detik)
+start
+:Spark membaca offset baru dari Kafka
+(paling banyak 400 pesan, melanjutkan checkpoint);
+if (Ada pesan baru?) then (tidak)
+  stop
+else (ya)
+endif
+:Unduh ulang jadwal statis GTFS bila hari (zona New York) sudah berganti;
+:aggregate(): decode setiap pesan menjadi observasi, lalu agregat
+menit × rute × arah dan jam × stasiun × rute;
+:MongoDB: upsert dokumen kedatangan dan gangguan per _id;
+note right
+  Idempoten: penulisan ulang
+  menghasilkan dokumen yang sama
+end note
+:PostgreSQL, satu transaksi:
+INSERT log batch_id ... ON CONFLICT DO NOTHING;
+if (batch_id sudah pernah tercatat?) then (ya)
+  :Batch diputar ulang setelah restart,
+  agregat tidak ditambahkan lagi;
+  stop
+else (tidak)
+  :Upsert aditif agregat menit dan jam;
+  :COMMIT (log dan agregat tersimpan bersama);
+endif
+if (Sudah lebih dari 1 jam sejak pembersihan terakhir?) then (ya)
+  :Hapus agregat menit dan log batch > 14 hari,
+  state perjalanan yang tidak terlihat > 2 jam;
+else (tidak)
+endif
+stop
+@enduml

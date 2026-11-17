@@ -1,0 +1,34 @@
+@startuml
+!include _alur_style.iuml
+title Menghitung keterlambatan satu observasi (delay_seconds)
+start
+:Hari layanan = start_date perjalanan
+(bila kosong: tanggal feed di zona New York);
+if (trip_id cocok dengan pola kunci
+"HHMMSS_rute..N/S"?) then (tidak)
+  :delay kosong
+  (pola trip_id lain, misalnya SIR);
+  stop
+else (ya)
+endif
+:Cari service_id yang berlaku pada hari layanan
+(calendar.txt ditambah pengecualian calendar_dates.txt);
+if (Ada jadwal untuk (service, kunci perjalanan, stasiun)?) then (tidak)
+  :delay kosong
+  (misalnya trip tambahan di luar jadwal);
+  stop
+else (ya)
+endif
+:delay = waktu prediksi − waktu terjadwal;
+if (−3 jam ≤ delay ≤ 3 jam?) then (ya)
+  :delay dipakai dalam agregat;
+  if (delay > 5 menit?) then (ya)
+    :Juga dihitung sebagai observasi terlambat;
+  else (tidak)
+  endif
+else (tidak)
+  :delay kosong (outlier: bukan perjalanan
+  yang sama, misalnya di batas hari layanan);
+endif
+stop
+@enduml

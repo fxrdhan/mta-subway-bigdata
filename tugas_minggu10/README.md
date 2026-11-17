@@ -23,6 +23,7 @@ Implementasi rancangan ETL Minggu 9 untuk data MTA Subway, dijalankan di klaster
 | `build/shots/` | Pembuat tangkapan layar dari *notebook* dan dari keluaran perintah di klaster |
 | `build/report/` | Pembuat dokumentasi DOCX/PDF (docx-js, daftar isi dua tahap, pemeriksaan tabel terpotong) |
 | `build/package/` | Penyusun paket pengumpulan `dist/Tugas_Minggu10_Smile.zip` |
+| `pegangan/` | Pegangan internal alur pemikiran dan alur keputusan pipeline (Markdown, diagram PlantUML, PDF); dibangun ulang dengan `sh pegangan/build.sh` |
 
 ## Menjalankan
 

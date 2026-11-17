@@ -1,0 +1,45 @@
+@startuml
+!include _alur_style.iuml
+title Keputusan per snapshot feed dan per perjalanan (decode dan observe_trip)
+start
+:Decode protobuf (GTFS-Realtime dan ekstensi NYCT);
+if (Timestamp feed ≤ snapshot terakhir feed yang sama?) then (ya)
+  :Snapshot berulang, dilewati seluruhnya;
+  stop
+else (tidak)
+endif
+:Simpan sebagai snapshot terakhir feed ini,
+menit = timestamp dibulatkan ke bawah;
+repeat :Ambil entitas berikutnya;
+  switch (Jenis entitas?)
+  case (vehicle)
+    if (current_status = STOPPED_AT?) then (ya)
+      :stopped_at[rute, arah] + 1;
+    else (tidak atau kosong)
+      :Kosong berarti IN_TRANSIT_TO,
+      tidak dihitung berhenti;
+    endif
+  case (trip_update)
+    :Buang prediksi yang lebih awal
+    dari waktu feed − 30 detik;
+    if (Masih ada prediksi?) then (tidak)
+      :Perjalanan sudah selesai,
+      tidak ada observasi;
+    else (ya)
+      :Stasiun berikutnya = prediksi pertama yang tersisa
+      Arah: ekstensi NYCT, lalu trip_id "..S", selain itu N;
+      :Hitung keterlambatan (diagram berikutnya);
+      :Satu observasi: menit, rute, arah, stasiun, delay;
+      if (Ada state sebelumnya, stasiun berikutnya berubah,
+      dan prediksi lama ≤ waktu feed + 60 detik?) then (ya)
+        :Dokumen kedatangan untuk stasiun lama;
+      else (tidak)
+      endif
+      :Perbarui state perjalanan;
+    endif
+  case (alert)
+    :Dokumen gangguan layanan;
+  endswitch
+repeat while (Masih ada entitas?) is (ya) not (tidak)
+stop
+@enduml

@@ -1,0 +1,53 @@
+@startuml
+!include _alur_style.iuml
+title Jalur batch: urutan langkah di notebook (run pertama)
+start
+partition "1. Extract" {
+  :Minta fingerprint tiap hari ke SODA API
+  (jumlah baris, total ridership, total transfers, revisi terakhir);
+  :Baca fingerprint yang tersimpan (etl.ingest_day);
+  :Bandingkan per hari, lalu tentukan bulan yang berubah;
+  note right
+    Run pertama: tabel masih kosong,
+    jadi seluruh 23 bulan (674 hari) diekstraksi
+  end note
+  :Unduh tiap hari secara paralel (6 thread),
+  per halaman 500.000 baris;
+  while (Jumlah baris hari itu = fingerprint server?) is (tidak)
+    :Ulangi unduhan hari itu
+    (paling banyak 3 kali, lalu galat);
+  endwhile (ya)
+  :Tulis satu berkas Parquet per hari ke staging;
+}
+partition "2. Transform" {
+  :Pemeriksaan awal dengan DuckDB di atas Parquet:
+  jumlah baris, kolom, nilai kosong, duplikat;
+  :Bangun tabel bantu station_mode dan dst_hour,
+  lalu inspeksi 12 aturan kualitas;
+  if (Ada pelanggaran aturan blocking?) then (ya)
+    :**Berhenti**: check_blocking() menghentikan notebook;
+    stop
+  else (tidak)
+  endif
+  :Bersihkan dan buat fitur turunan, tulis clean.parquet;
+  :Agregasi menjadi 3 tabel fakta dan 2 dimensi;
+  :Validasi 10 cek dan tampilkan hasilnya
+  (jumlah baris, total ridership, tipe data, kunci unik, dan lainnya);
+}
+partition "3. Load" {
+  repeat :Untuk setiap bulan, buka satu transaksi;
+    :DELETE data bulan itu di 3 tabel fakta;
+    :COPY hasil transformasi bulan itu;
+    :Catat pelanggaran tiap aturan (quality_month);
+  repeat while (Masih ada bulan?) is (ya) not (tidak)
+  :Upsert dimensi, lalu catat fingerprint hari yang dimuat;
+  :Baca kembali: jumlah baris dan total ridership
+  di DuckDB dibandingkan dengan PostgreSQL;
+  :Tulis transformed_dataset.csv;
+}
+partition "4. Integrasi dan 5. Pengujian" {
+  :Jalankan run_etl() sebagai run kedua;
+  :14 uji jalur batch;
+}
+stop
+@enduml

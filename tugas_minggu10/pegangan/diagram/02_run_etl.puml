@@ -1,0 +1,50 @@
+@startuml
+!include _alur_style.iuml
+title run_etl(): keputusan dalam satu run batch
+start
+:Catat run baru di etl.pipeline_run
+(status running, tahap extract);
+:Bandingkan fingerprint server dengan fingerprint tersimpan;
+if (Ada bulan yang berubah?) then (tidak)
+  :Tidak ada yang diekstraksi;
+  note right
+    Run kedua pada 17 November 2026:
+    seluruh 674 hari sama, selesai dalam 95 detik
+  end note
+else (ya)
+  :Extract semua hari pada bulan yang berubah;
+  if (Jumlah baris tiap hari cocok
+  dengan fingerprint (maks. 3 percobaan)?) then (ya)
+  else (tidak)
+    :**Gagal**: status failed, tahap extract;
+    end
+  endif
+  :Bangun ulang tabel bantu station_mode dan dst_hour;
+  :tahap = transform
+  Hitung pelanggaran 12 aturan kualitas;
+  if (Ada pelanggaran aturan blocking?) then (tidak)
+  else (ya)
+    :**Gagal**: status failed, tahap transform;
+    end
+  endif
+  :Bersihkan data dan bangun agregat;
+  if (Sepuluh cek validasi lulus?) then (ya)
+  else (tidak)
+    :**Gagal**: status failed, tahap transform
+    (nama cek yang gagal dicatat);
+    end
+  endif
+  :tahap = load
+  Ganti data per bulan (satu transaksi per bulan),
+  upsert dimensi, catat fingerprint;
+  note right
+    Bila galat: bulan yang sedang dimuat di-rollback
+    dan run dicatat failed pada tahap load.
+    Fingerprint dicatat paling akhir, jadi run berikutnya
+    mengulang bulan-bulan itu dengan aman.
+  end note
+endif
+:Hapus staging (data mentah tidak disimpan);
+:**Berhasil**: status success, tahap done;
+stop
+@enduml
