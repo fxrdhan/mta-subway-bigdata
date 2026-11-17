@@ -1,0 +1,29 @@
+/* Gaya PDF pegangan (dicetak dengan Chrome headless). */
+@page {
+  size: A4;
+  margin: 16mm 15mm 16mm 15mm;
+  @bottom-center { content: counter(page) " / " counter(pages); font: 8pt Helvetica, Arial, sans-serif; color: #777; }
+}
+html { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 9.6pt; line-height: 1.45; color: #1E1E1E; background: #FFFFFF; }
+body { margin: 0; max-width: none; padding: 0; }
+header#title-block-header { margin-bottom: 4mm; }
+h1.title { font-size: 19pt; margin: 0 0 2mm 0; }
+h1 { font-size: 14pt; margin: 7mm 0 2.5mm 0; padding-bottom: 1.2mm; border-bottom: 1.2pt solid #1E1E1E; break-after: avoid; }
+h2 { font-size: 11.5pt; margin: 5mm 0 2mm 0; break-after: avoid; }
+h1.page { break-before: page; }
+p { margin: 0 0 2.2mm 0; }
+ul, ol { margin: 0 0 2.5mm 0; padding-left: 6mm; }
+li { margin-bottom: 0.8mm; }
+code { font-family: Menlo, "SF Mono", Consolas, monospace; font-size: 0.86em; background: #F2F2F2; padding: 0 0.6mm; border-radius: 1mm; }
+table { border-collapse: collapse; width: 100%; margin: 1.5mm 0 4mm 0; font-size: 8.4pt; line-height: 1.35; }
+th, td { border: 0.6pt solid #9A9A9A; padding: 1.2mm 1.6mm; vertical-align: top; text-align: left; }
+th { background: #EDEDED; font-weight: bold; }
+tr { break-inside: avoid; }
+thead { display: table-header-group; }
+/* Gambar berdiri sendiri dalam paragraf (GFM tidak membuat <figure>). */
+img { display: block; max-width: 100%; max-height: 250mm; margin: 2mm auto 4mm auto; break-inside: avoid; }
+nav#TOC { border: 0.6pt solid #9A9A9A; padding: 2.5mm 5mm; margin: 2mm 0 4mm 0; font-size: 9pt; }
+nav#TOC ul { list-style: none; padding-left: 0; margin: 0; }
+nav#TOC ul ul { padding-left: 5mm; }
+nav#TOC a { color: #1E1E1E; text-decoration: none; }
+strong { font-weight: bold; }

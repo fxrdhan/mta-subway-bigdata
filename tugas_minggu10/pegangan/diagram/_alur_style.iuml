@@ -1,0 +1,32 @@
+' Gaya diagram alur pegangan Minggu 10: hitam di atas putih, seperti diagram rancangan Minggu 9.
+' SVG: plantuml -tsvg 0*.puml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam defaultFontName Helvetica
+skinparam defaultFontSize 11
+skinparam roundCorner 8
+skinparam ArrowColor #1E1E1E
+skinparam ArrowFontSize 10
+skinparam ArrowFontColor #4A4A4A
+skinparam TitleFontSize 13
+skinparam TitleFontStyle bold
+skinparam activity {
+  BackgroundColor #FFFFFF
+  BorderColor #1E1E1E
+  DiamondBackgroundColor #F4F4F4
+  DiamondBorderColor #1E1E1E
+  DiamondFontSize 10
+  StartColor #1E1E1E
+  EndColor #1E1E1E
+  BarColor #1E1E1E
+}
+skinparam partition {
+  BorderColor #8A8A8A
+  FontStyle bold
+  FontSize 11
+}
+skinparam note {
+  BackgroundColor #FFFBEA
+  BorderColor #8A8A8A
+  FontSize 10
+}

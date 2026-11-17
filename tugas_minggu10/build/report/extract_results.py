@@ -87,7 +87,7 @@ if not STREAM_ONLY:
     t = text("sizes = transform()")
     sizes = ast.literal_eval(re.search(r"ditransformasi: (\{.*\})", t).group(1))
     B["sizes"] = {k: intc(v) for k, v in sizes.items()}
-    B["validation"] = [[k, v == "True"] for k, v in series(text("validation = {")).items()]
+    B["validation"] = [[k, v == "True"] for k, v in series(text("validation = validate(")).items()]
     comp = frame("comparison = pd.DataFrame")
     B["comparison"] = [[k, str(r["sebelum"]), str(r["sesudah"])] for k, r in comp.iterrows()]
     B["total_transfers_after"] = intc(comp.loc["total transfers", "sesudah"])
