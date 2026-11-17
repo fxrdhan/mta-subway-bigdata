@@ -12,7 +12,10 @@ P=$W/dist/Tugas_Minggu10_Smile
 rm -rf "$P" "$P.zip"
 mkdir -p "$P/Source_Code" "$P/Dataset" "$P/Documentation" "$P/Screenshots"
 cp "$W/ETL_Pipeline.ipynb" "$P/Source_Code/"
-cp -R "$W/streaming" "$W/k8s" "$P/Source_Code/"
+# Hanya berkas sumber; cache Python (__pycache__) tidak ikut.
+mkdir -p "$P/Source_Code/streaming" "$P/Source_Code/k8s"
+cp "$W"/streaming/*.py "$P/Source_Code/streaming/"
+cp "$W"/k8s/*.yaml "$P/Source_Code/k8s/"
 cp "$HERE/README_Source_Code.md" "$P/Source_Code/README.md"
 cp "$CSV" "$P/Dataset/transformed_dataset.csv"
 cp "$PDF" "$P/Documentation/Dokumentasi_ETL.pdf"
