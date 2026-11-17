@@ -463,8 +463,14 @@ def dst_transition_hours(first: dt.datetime, last: dt.datetime) -> list[dt.datet
     return hours
 
 
-def build_station_mode() -> None:
-    """Tabel bantu `station_mode`: moda dominan tiap kompleks stasiun."""
+# Baris pada jam peralihan DST. Daftar jamnya ada di tabel bantu dst_hour yang dibangun ulang setiap run.
+IS_DST_HOUR = "transit_timestamp IN (SELECT hour FROM dst_hour)"
+
+
+def build_helper_tables() -> None:
+    """Tabel bantu dari view `raw`, dibangun ulang setiap run:
+    `station_mode` (moda dominan tiap kompleks stasiun) dan `dst_hour` (jam peralihan DST
+    di dalam rentang waktu data yang sedang diproses)."""
     duck.execute("""
         CREATE OR REPLACE TABLE station_mode AS
         SELECT station_complex_id, arg_max(transit_mode, n) AS station_mode
@@ -474,17 +480,15 @@ def build_station_mode() -> None:
             GROUP BY ALL
         )
         GROUP BY ALL""")
+    first, last = duck.execute(
+        "SELECT min(transit_timestamp), max(transit_timestamp) FROM raw").fetchone()
+    duck.execute("CREATE OR REPLACE TABLE dst_hour (hour TIMESTAMP)")
+    hours = dst_transition_hours(first, last)
+    if hours:
+        duck.executemany("INSERT INTO dst_hour VALUES (?)", [(hour,) for hour in hours])
 
 
-first_ts, last_ts = duck.execute(
-    "SELECT min(transit_timestamp), max(transit_timestamp) FROM raw").fetchone()
-dst_hours = dst_transition_hours(first_ts, last_ts)
-if dst_hours:
-    listed = ", ".join(f"TIMESTAMP '{hour:%Y-%m-%d %H:%M:%S}'" for hour in dst_hours)
-    IS_DST_HOUR = f"transit_timestamp IN ({listed})"
-else:
-    IS_DST_HOUR = "FALSE"
-build_station_mode()
+build_helper_tables()
 
 
 class Rule(NamedTuple):
@@ -567,9 +571,15 @@ inspection
 # penanganan; pipeline akan berhenti bila aturan tersebut dilanggar pada data baru.
 
 # %%
-blocking = {name: int(violations[name])
-            for name, rule in RULES.items() if rule.blocking and violations[name]}
-assert not blocking, f"Pelanggaran yang tidak bisa diperbaiki otomatis: {blocking}"
+def check_blocking(violations: pd.Series) -> None:
+    """Menghentikan pipeline bila ada pelanggaran aturan blocking (tidak bisa diperbaiki otomatis)."""
+    blocking = {name: int(violations[name])
+                for name, rule in RULES.items() if rule.blocking and violations[name]}
+    if blocking:
+        raise RuntimeError(f"Pelanggaran yang tidak bisa diperbaiki otomatis: {blocking}")
+
+
+check_blocking(violations)
 print("Tidak ada pelanggaran yang menghentikan pipeline.")
 
 # %% [markdown]
@@ -580,7 +590,7 @@ print("Tidak ada pelanggaran yang menghentikan pipeline.")
 # %%
 CLEAN_PARQUET = STAGING / "clean" / "clean.parquet"
 
-CLEAN_SQL = """
+CLEAN_SQL = f"""
     SELECT
         transit_timestamp,
         -- fitur turunan
@@ -588,7 +598,7 @@ CLEAN_SQL = """
         hour(transit_timestamp)         AS hour_of_day,
         isodow(transit_timestamp)       AS day_of_week,
         isodow(transit_timestamp) >= 6  AS is_weekend,
-        {is_dst_hour}                   AS is_dst_transition,
+        {IS_DST_HOUR} AS is_dst_transition,
         -- standardisasi: moda dominan kompleks stasiun
         station_mode AS transit_mode,
         station_complex_id, station_complex, borough, payment_method, fare_class_category,
@@ -646,8 +656,7 @@ def transform() -> dict[str, int]:
     membangun tabel agregat dan dimensi. Mengembalikan jumlah baris tiap tabel."""
     log.info("Proses Transform dimulai")
     CLEAN_PARQUET.parent.mkdir(parents=True, exist_ok=True)
-    clean_sql = CLEAN_SQL.format(is_dst_hour=IS_DST_HOUR)
-    duck.execute(f"COPY ({clean_sql}) TO '{CLEAN_PARQUET}' (FORMAT parquet, COMPRESSION zstd)")
+    duck.execute(f"COPY ({CLEAN_SQL}) TO '{CLEAN_PARQUET}' (FORMAT parquet, COMPRESSION zstd)")
     duck.execute(f"CREATE OR REPLACE VIEW clean AS SELECT * FROM read_parquet('{CLEAN_PARQUET}')")
     for table, sql in AGGREGATES.items():
         duck.execute(f"CREATE OR REPLACE TABLE {table} AS {sql}")
@@ -684,51 +693,69 @@ def count_rows(where: str, table: str = "clean") -> int:
 
 
 REQUIRED = ["transit_timestamp", "station_complex_id", "payment_method", "ridership", "transfers"]
-clean_types = {row[0]: row[1] for row in duck.execute("DESCRIBE clean").fetchall()}
-clean_ridership = duck_value("SELECT sum(ridership) FROM clean")
-missing_after = count_rows(" OR ".join(f"{column} IS NULL" for column in REQUIRED))
-negative_after = count_rows("transfers < 0")
-dup_keys_after = count_duplicates(KEY_COLUMNS, "clean")
-modes_per_station = duck_value("""
-    SELECT max(n) FROM (
-        SELECT count(DISTINCT transit_mode) AS n FROM clean GROUP BY station_complex_id)""")
-duplicate_station_days = duck_value(
-    "SELECT count(*) - count(DISTINCT (day, station_complex_id)) FROM t_daily_station")
 
-validation = {
-    "jumlah baris bersih = jumlah baris mentah": sizes["clean"] == n_rows,
-    "tidak ada nilai kosong": missing_after == 0,
-    "ridership dan transfers bertipe INTEGER":
-        clean_types["ridership"] == clean_types["transfers"] == "INTEGER",
-    "tidak ada transfers negatif": negative_after == 0,
-    "satu moda per stasiun": modes_per_station == 1,
-    "total ridership tidak berubah": clean_ridership == summary_before["total ridership"],
-    "total ridership agregat jam = data bersih":
-        duck_value("SELECT sum(ridership) FROM t_hourly") == clean_ridership,
-    "total ridership harian stasiun = data bersih":
-        duck_value("SELECT sum(ridership) FROM t_daily_station") == clean_ridership,
-    "kunci agregat unik": duplicate_station_days == 0,
-    "tidak ada duplikat kunci": dup_keys_after == 0,
-}
+
+def measure_clean() -> dict:
+    """Besaran data bersih dan tabel agregat yang diperiksa validasi."""
+    types = {row[0]: row[1] for row in duck.execute("DESCRIBE clean").fetchall()}
+    return {
+        "rows": duck_value("SELECT count(*) FROM clean"),
+        "columns": len(types),
+        "count_type": types["ridership"],
+        "transfers_type": types["transfers"],
+        "missing": count_rows(" OR ".join(f"{column} IS NULL" for column in REQUIRED)),
+        "negative_transfers": count_rows("transfers < 0"),
+        "duplicate_keys": count_duplicates(KEY_COLUMNS, "clean"),
+        "max_modes_per_station": duck_value("""
+            SELECT max(n) FROM (
+                SELECT count(DISTINCT transit_mode) AS n FROM clean GROUP BY station_complex_id)"""),
+        "duplicate_station_days": duck_value(
+            "SELECT count(*) - count(DISTINCT (day, station_complex_id)) FROM t_daily_station"),
+        "ridership": duck_value("SELECT sum(ridership) FROM clean"),
+        "transfers": duck_value("SELECT sum(transfers) FROM clean"),
+        "ridership_hourly": duck_value("SELECT sum(ridership) FROM t_hourly"),
+        "ridership_daily_station": duck_value("SELECT sum(ridership) FROM t_daily_station"),
+    }
+
+
+def validate(after: dict, raw_rows: int, raw_ridership: float) -> dict[str, bool]:
+    """Sepuluh cek setelah transformasi. Data hanya boleh dimuat bila semuanya lulus."""
+    return {
+        "jumlah baris bersih = jumlah baris mentah": after["rows"] == raw_rows,
+        "tidak ada nilai kosong": after["missing"] == 0,
+        "ridership dan transfers bertipe INTEGER":
+            after["count_type"] == after["transfers_type"] == "INTEGER",
+        "tidak ada transfers negatif": after["negative_transfers"] == 0,
+        "satu moda per stasiun": after["max_modes_per_station"] == 1,
+        "total ridership tidak berubah": after["ridership"] == raw_ridership,
+        "total ridership agregat jam = data bersih":
+            after["ridership_hourly"] == after["ridership"],
+        "total ridership harian stasiun = data bersih":
+            after["ridership_daily_station"] == after["ridership"],
+        "kunci agregat unik": after["duplicate_station_days"] == 0,
+        "tidak ada duplikat kunci": after["duplicate_keys"] == 0,
+    }
+
+
+after = measure_clean()
+validation = validate(after, n_rows, summary_before["total ridership"])
 pd.Series(validation, name="lulus")
 
 # %% [markdown]
 # ### 2e. Perbandingan kondisi data sebelum dan sesudah transformasi
 
 # %%
-transfers_after = duck_value("SELECT sum(transfers) FROM clean")
 before_after = {  # aspek: (sebelum, sesudah)
-    "baris": (f"{n_rows:,}", f"{sizes['clean']:,}"),
-    "kolom": (n_cols, len(clean_types)),
-    "nilai kosong": (summary_before["nilai_kosong"], missing_after),
-    "duplikat kunci": (dup_keys, dup_keys_after),
+    "baris": (f"{n_rows:,}", f"{after['rows']:,}"),
+    "kolom": (n_cols, after["columns"]),
+    "nilai kosong": (summary_before["nilai_kosong"], after["missing"]),
+    "duplikat kunci": (dup_keys, after["duplicate_keys"]),
     # sesudah = 0 karena setiap stasiun tinggal satu moda (validasi "satu moda per stasiun")
     "moda tidak konsisten": (int(violations["station_mode_mismatch"]), 0),
-    "transfers negatif": (int(violations["negative_transfers"]), negative_after),
-    "tipe ridership/transfers":
-        (summary_before["tipe ridership/transfers"], clean_types["ridership"]),
-    "total ridership": (f"{summary_before['total ridership']:,.0f}", f"{clean_ridership:,}"),
-    "total transfers": (f"{summary_before['total transfers']:,.0f}", f"{transfers_after:,}"),
+    "transfers negatif": (int(violations["negative_transfers"]), after["negative_transfers"]),
+    "tipe ridership/transfers": (summary_before["tipe ridership/transfers"], after["count_type"]),
+    "total ridership": (f"{summary_before['total ridership']:,.0f}", f"{after['ridership']:,}"),
+    "total transfers": (f"{summary_before['total transfers']:,.0f}", f"{after['transfers']:,}"),
     "atribut berulang": ("georeference ada", "dibuang (sama dengan lat/lon)"),
     "fitur baru": ("-", "date, hour_of_day, day_of_week, is_weekend, is_dst_transition"),
 }
@@ -916,9 +943,10 @@ print(f"Dataset hasil transformasi: {csv_path} "
 
 # %% [markdown]
 # ## 4. ETL Pipeline Integration
-# Seluruh tahapan digabung dalam fungsi `run_etl()`. Transform hanya berjalan bila Extract berhasil, dan Load
-# hanya berjalan bila Transform serta validasi berhasil. Setiap run dicatat di `etl.pipeline_run` beserta
-# tahap tempat kegagalan terjadi. Area *staging* dihapus setelah Load berhasil (data mentah tidak disimpan).
+# Seluruh tahapan digabung dalam fungsi `run_etl()`. Transform hanya berjalan bila Extract berhasil dan tidak ada
+# pelanggaran aturan *blocking*, dan Load hanya berjalan bila sepuluh cek validasi lulus. Setiap run dicatat di
+# `etl.pipeline_run` beserta tahap tempat kegagalan terjadi. Area *staging* dihapus setelah Load berhasil
+# (data mentah tidak disimpan).
 #
 # Run di bawah ini adalah eksekusi kedua dari awal sampai akhir. Karena fingerprint seluruh hari sudah tersimpan,
 # hanya bulan yang direvisi MTA sejak run pertama yang diekstraksi ulang.
@@ -937,8 +965,9 @@ def finish_run(run_id, status: str, stage: str, days=None, rows=None, months=Non
 def run_etl() -> dict:
     """Extract → Transform → Load untuk hari yang berubah sejak run sebelumnya.
 
-    Setiap tahap hanya berjalan bila tahap sebelumnya berhasil. Hasil run dan tahap tempat
-    kegagalan terjadi dicatat di etl.pipeline_run.
+    Setiap tahap hanya berjalan bila tahap sebelumnya berhasil: Transform berhenti bila ada
+    pelanggaran aturan blocking, dan Load hanya berjalan bila sepuluh cek validasi lulus.
+    Hasil run dan tahap tempat kegagalan terjadi dicatat di etl.pipeline_run.
     """
     run_id, stage = uuid.uuid4(), "extract"
     pg.execute(f"INSERT INTO {SCHEMA}.pipeline_run (run_id, started_at, status, stage) "
@@ -956,11 +985,16 @@ def run_etl() -> dict:
         else:
             result["baris_extract"] = extract(days, fingerprints)
             create_raw_view()
-            build_station_mode()
+            build_helper_tables()
 
             stage = "transform"
-            if transform()["clean"] != result["baris_extract"]:
-                raise RuntimeError("jumlah baris berubah saat transformasi")
+            check_blocking(count_violations())
+            raw_ridership = duck_value("SELECT sum(ridership) FROM raw")
+            transform()
+            checks = validate(measure_clean(), result["baris_extract"], raw_ridership)
+            failed = [name for name, passed in checks.items() if not passed]
+            if failed:
+                raise RuntimeError(f"validasi gagal: {', '.join(failed)}")
 
             stage = "load"
             load(months, fingerprints[fingerprints.day.isin(days)])
@@ -1027,9 +1061,10 @@ tests = [  # (tahapan, aspek yang diuji, hasil yang diharapkan, hasil aktual, lu
     ("Extract", "Atribut", "12 kolom sumber",
      f"{n_cols} kolom", n_cols == 12),
     ("Transform", "Nilai kosong", "0 setelah transformasi",
-     str(missing_after), missing_after == 0),
+     str(after["missing"]), validation["tidak ada nilai kosong"]),
     ("Transform", "Duplikasi", "0 duplikat kunci",
-     f"{dup_keys} sebelum, {dup_keys_after} sesudah", validation["tidak ada duplikat kunci"]),
+     f"{dup_keys} sebelum, {after['duplicate_keys']} sesudah",
+     validation["tidak ada duplikat kunci"]),
     ("Transform", "Transfers negatif", "Diubah menjadi 0",
      f"{int(violations['negative_transfers'])} baris diperbaiki",
      validation["tidak ada transfers negatif"]),
@@ -1037,7 +1072,7 @@ tests = [  # (tahapan, aspek yang diuji, hasil yang diharapkan, hasil aktual, lu
      f"{int(violations['station_mode_mismatch'])} baris diseragamkan",
      validation["satu moda per stasiun"]),
     ("Transform", "Tipe data", "ridership/transfers INTEGER",
-     clean_types["ridership"], validation["ridership dan transfers bertipe INTEGER"]),
+     after["count_type"], validation["ridership dan transfers bertipe INTEGER"]),
     ("Transform", "Kehilangan data", "Total ridership tetap",
      f"{summary_before['total ridership']:,.0f}", validation["total ridership tidak berubah"]),
     ("Load", "Koneksi", "Terhubung ke PostgreSQL",
