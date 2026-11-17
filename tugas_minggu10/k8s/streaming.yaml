@@ -109,9 +109,11 @@ spec:
         - { name: KAFKA_BOOTSTRAP, value: "mta-kafka.mta-pipeline.svc.cluster.local:9092" }
         - { name: KAFKA_TOPIC, value: mta-gtfs-stream }
         - { name: POLL_SECONDS, value: "30" }
+        # pip install menulis ±30 MB ke disk node; request ephemeral-storage mencegah pod ini dipilih lebih dahulu
+        # saat node kekurangan disk (pernah di-evict karena request-nya 0).
         resources:
-          requests: { cpu: 100m, memory: 128Mi }
-          limits: { cpu: 500m, memory: 256Mi }
+          requests: { cpu: 100m, memory: 128Mi, ephemeral-storage: 64Mi }
+          limits: { cpu: 500m, memory: 256Mi, ephemeral-storage: 256Mi }
         volumeMounts: [{ name: code, mountPath: /app, readOnly: true }]
       volumes:
       - name: code
